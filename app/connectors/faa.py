@@ -14,7 +14,8 @@ from typing import Dict, List, Optional, Tuple
 
 from app.http import get_text
 from app.models import Airport, Place, Severity, Signal, Trip
-from app.timewin import Window, flight_airports, fmt_local, local_today, operating_window, overlap_hours
+from app.timewin import (Window, area_of, flight_airports, fmt_local, local_today,
+                         operating_window, overlap_hours)
 
 FAA_URL = "https://nasstatus.faa.gov/api/airport-status-information"
 SOURCE = "FAA NAS Status"
@@ -52,7 +53,7 @@ def parse(xml_text: str, trip: Trip, now: Optional[datetime] = None) -> List[Sig
     for code, (ap, place) in watched.items():
         if code not in flagged:
             signals.append(Signal(
-                source=SOURCE, location=code, category="airport_ops", severity=Severity.none,
+                source=SOURCE, area=area_of(trip, place), location=code, category="airport_ops", severity=Severity.none,
                 headline=f"{code}: no ground stops, delay programs or closures reported",
                 url=LINK, observed_at=updated,
                 valid_for_travel_date=trip.travel_date == local_today(place.timezone),
@@ -74,7 +75,7 @@ def _closure(el, ap: Airport, place: Place, trip: Trip, updated: datetime) -> Op
         return None  # e.g. LGA's routine overnight closure: no scheduled flights affected
     sev = Severity.severe if exposed >= 3 else Severity.high if exposed >= 1 else Severity.moderate
     return Signal(
-        source=SOURCE, location=ap.iata, category="airport_ops", severity=sev,
+        source=SOURCE, area=area_of(trip, place), location=ap.iata, category="airport_ops", severity=sev,
         headline=(f"{ap.iata} closed {fmt_local(window[0], place.timezone)} - "
                   f"{fmt_local(window[1], place.timezone)} (~{exposed:.1f} h of operating hours)"),
         detail=f"NOTAM: {reason}", url=LINK, observed_at=updated,
@@ -120,7 +121,7 @@ def _live_delay(el, ap: Airport, place: Place, trip: Trip, updated: datetime) ->
     if not is_today:
         sev = min(sev, Severity.low, key=int)
     return Signal(
-        source=SOURCE, location=ap.iata, category="airport_ops", severity=sev,
+        source=SOURCE, area=area_of(trip, place), location=ap.iata, category="airport_ops", severity=sev,
         headline=(f"{ap.iata}: {what}" if is_today
                   else f"{ap.iata} right now: {what} (live status; may clear before your trip)"),
         detail=f"Reason: {reason}", url=LINK, observed_at=updated,

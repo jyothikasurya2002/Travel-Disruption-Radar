@@ -4,10 +4,11 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 
+from app.assess import assess
 from app.connectors import gather_signals
 from app.dates import DateError
 from app.geo import LocationError
-from app.models import Mode, Trip
+from app.models import Assessment, Mode, Trip, TripRequest
 from app.resolve import resolve_trip
 
 load_dotenv()
@@ -42,6 +43,12 @@ async def signals(origin: str, destination: str, date: str = "tomorrow", mode: M
     sigs, statuses = await gather_signals(trip)
     sigs.sort(key=lambda s: -int(s.severity))
     return {"trip": trip, "sources": statuses, "signals": sigs}
+
+
+@app.post("/api/assess", response_model=Assessment)
+async def assess_trip(req: TripRequest):
+    trip = await _trip_or_400(req.origin, req.destination, req.date, req.mode)
+    return await assess(trip)
 
 
 @app.get("/")

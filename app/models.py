@@ -73,6 +73,7 @@ class Signal(BaseModel):
 
     source: str                      # e.g. "FAA NAS Status"
     location: str                    # e.g. "JFK" or "I-80 near Cheyenne, WY"
+    area: str                        # "origin" | "destination" | "route": what part of the trip
     category: str                    # weather | airport_ops | road | alert
     severity: Severity
     headline: str                    # one-line human-readable finding
@@ -94,15 +95,34 @@ class SourceStatus(BaseModel):
 class TripRequest(BaseModel):
     origin: str = Field(..., examples=["New York"])
     destination: str = Field(..., examples=["San Francisco"])
-    travel_date: date
+    date: str = Field("tomorrow", examples=["tomorrow", "friday", "2026-10-24"])
     mode: Mode = Mode.flight
 
 
+class Driver(BaseModel):
+    """One line of the score's audit trail: why these points were added."""
+
+    points: int
+    reason: str
+    source: str
+    location: str
+
+
+class Action(BaseModel):
+    level: str                       # "none" | "monitor" | "mitigate" | "rebook"
+    headline: str                    # e.g. "Monitor and build in buffer time"
+    steps: List[str]
+
+
 class Assessment(BaseModel):
-    request: TripRequest
-    overall_severity: Severity
+    trip: Trip
     score: int                       # 0-100
-    recommended_action: str
+    overall_severity: Severity
+    level: str                       # Minimal | Low | Moderate | High | Severe
+    drivers: List[Driver]            # what produced the score, largest first
+    confidence: str                  # high | medium | low
+    confidence_reasons: List[str]
+    action: Action
     summary: str
     summary_source: str              # "llm" | "rules"
     signals: List[Signal]

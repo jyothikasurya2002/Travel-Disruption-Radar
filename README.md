@@ -90,6 +90,27 @@ look the same to an ops user.
 - *Open-Meteo:* the only source covering 16 days and every road sample, in
   one batched request. Fog matters for flights; steady rain only for drives.
 
+**Risk engine (step 4)**: [app/risk.py](app/risk.py)
+- *Deterministic and auditable.* Every point in the 0-100 score maps to a
+  `Driver` line naming the signal behind it. The LLM never sets the score.
+- *Scoring:* the worst finding sets the base (low 10 / moderate 25 / high 50
+  / severe 80). Each other **independent source** that sees moderate+
+  conditions **in the same part of the trip** (origin / destination / route)
+  adds +10 (max 2). Remaining findings add +3 each (max +10). Levels: <10
+  Minimal, <25 Low, <50 Moderate, <75 High, else Severe.
+- *Why "same part of the trip":* an early version counted gusty winds at
+  Norfolk as "corroborated" by an alert in Atlanta. Independent agreement
+  only means something about the same place. Covered by a regression test.
+- *Confidence is separate from risk* (high/medium/low). It drops for failed
+  sources, trips more than 3 or 7 days out, airports whose TAF doesn't reach
+  the travel date yet, and route points beyond the forecast range. A quiet
+  result with low confidence is **not** reported as "no action": it says
+  "re-check closer to the date".
+- *Actions are tiered* (none → monitor → mitigate → rebook) and specific:
+  if one airport in a multi-airport city is the problem, the action names a
+  clear alternate ("consider flying via EWR"). For drives, it names the
+  affected stretches. Every failed source becomes a "verify manually" step.
+
 ## Testing
 
 ```bash

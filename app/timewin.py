@@ -52,6 +52,10 @@ def flight_airports(trip: Trip) -> List[Tuple[Airport, Place]]:
     return [(a, p) for p in (trip.origin, trip.destination) for a in p.airports]
 
 
+def area_of(trip: Trip, place: Place) -> str:
+    return "origin" if place is trip.origin else "destination"
+
+
 def local_today(tz: str) -> date:
     return datetime.now(ZoneInfo(tz)).date()
 

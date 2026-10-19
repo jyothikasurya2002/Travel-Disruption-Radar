@@ -5,12 +5,13 @@ arrival-rate reductions and ground delay programs, plus the weather that
 causes ground stops (thunderstorms, freezing precipitation, heavy snow).
 TAFs only reach ~24-30 h ahead; beyond that we say so instead of guessing.
 """
+import re
 from datetime import datetime, timezone
 from typing import Dict, List, Optional, Tuple
 
 from app.http import get_json
 from app.models import Airport, Place, Severity, Signal, Trip
-from app.timewin import Window, flight_airports, fmt_local, operating_window, overlap_hours
+from app.timewin import Window, area_of, flight_airports, fmt_local, operating_window, overlap_hours
 
 TAF_URL = "https://aviationweather.gov/api/data/taf"
 SOURCE = "AviationWeather TAF"
@@ -38,7 +39,7 @@ def parse(data: list, pairs: List[Tuple[Airport, Place]], trip: Trip) -> List[Si
 
         if overlap_hours(valid, window) == 0:
             signals.append(Signal(
-                source=SOURCE, location=ap.iata, category="weather", severity=Severity.none,
+                source=SOURCE, area=area_of(trip, place), location=ap.iata, category="weather", severity=Severity.none,
                 headline=(f"{ap.iata}: TAF only covers until {fmt_local(valid[1], place.timezone)}; "
                           "travel date is beyond its range"),
                 detail=taf.get("rawTAF"), url=link, observed_at=issued, valid_for_travel_date=False,
@@ -56,13 +57,23 @@ def parse(data: list, pairs: List[Tuple[Airport, Place]], trip: Trip) -> List[Si
 
         if hazards:
             worst = max(int(h[0]) for h in hazards)
-            reasons = sorted({f"{t} from {fmt_local(at, place.timezone)}" for s, t, at in hazards if int(s) == worst})
-            headline = f"{ap.iata} forecast: " + "; ".join(reasons[:3])
+            # Group by hazard kind ("gusty winds", "IFR conditions"…) so a hazard
+            # spanning several TAF periods reads once, with its first occurrence.
+            groups: Dict[str, List[Tuple[str, datetime]]] = {}
+            for s, text, at in sorted(hazards, key=lambda h: h[2]):
+                if int(s) == worst:
+                    groups.setdefault(re.split(r"[\d(]", text)[0].strip(), []).append((text, at))
+            parts = []
+            for items in groups.values():
+                text, at = items[0]
+                more = f" (+{len(items) - 1} more period{'s' if len(items) > 2 else ''})" if len(items) > 1 else ""
+                parts.append(f"{text} from {fmt_local(at, place.timezone)}{more}")
+            headline = f"{ap.iata} forecast: " + "; ".join(parts[:3])
             sev = Severity(worst)
         else:
             sev, headline = Severity.none, f"{ap.iata} forecast: VFR, no significant weather on travel day"
         signals.append(Signal(
-            source=SOURCE, location=ap.iata, category="weather", severity=sev,
+            source=SOURCE, area=area_of(trip, place), location=ap.iata, category="weather", severity=sev,
             headline=headline, detail=taf.get("rawTAF"), url=link, observed_at=issued,
         ))
     return signals

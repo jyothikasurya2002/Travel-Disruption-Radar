@@ -56,7 +56,7 @@ def test_nws_ignores_alert_outside_exposure_window():
         "id": "a1", "event": "Wind Advisory", "severity": "Moderate",
         "onset": "2026-10-19T10:00:00+00:00", "ends": "2026-10-19T22:00:00+00:00",
     }}]}
-    sigs = nws.parse([expired], [("JFK", 0, 0, window, "America/New_York")])
+    sigs = nws.parse([expired], [("JFK", 0, 0, window, "America/New_York", "origin")])
     assert all(s.severity == Severity.none for s in sigs)
 
 

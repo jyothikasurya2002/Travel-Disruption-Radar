@@ -11,21 +11,21 @@ from app.dates import MAX_DAYS_AHEAD
 from app.geo import nearest_town_label
 from app.http import get_json
 from app.models import Mode, Severity, Signal, Trip
-from app.timewin import Window, eta, fmt_local, operating_window
+from app.timewin import Window, area_of, eta, fmt_local, operating_window
 
 FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
 SOURCE = "Open-Meteo Forecast"
 HOURLY = "precipitation,snowfall,wind_gusts_10m,visibility,weather_code"
 
 Hazard = Tuple[Severity, str]
-Loc = Tuple[str, float, float, Window, str]  # label, lat, lon, exposure window, tz for display
+Loc = Tuple[str, float, float, Window, str, str]  # label, lat, lon, exposure window, tz, area
 
 
 async def fetch(trip: Trip) -> List[Signal]:
     locs = _locations(trip)
     start = trip.travel_date
     end = min(
-        max(w[1] for *_, w, _ in locs).date() + timedelta(days=1),
+        max(l[3][1] for l in locs).date() + timedelta(days=1),
         date.today() + timedelta(days=MAX_DAYS_AHEAD - 1),
     )
     data = await get_json(FORECAST_URL, {
@@ -44,20 +44,22 @@ def _locations(trip: Trip) -> List[Loc]:
         for p in (trip.origin, trip.destination):
             a = p.airports[0]
             label = "/".join(x.iata for x in p.airports)
-            out.append((label, a.lat, a.lon, operating_window(trip.travel_date, p.timezone), p.timezone))
+            out.append((label, a.lat, a.lon, operating_window(trip.travel_date, p.timezone), p.timezone,
+                        area_of(trip, p)))
         return out
     out = []
     for pt in trip.route.samples:
         t = eta(trip, pt)
         label = f"km {pt.km_from_start:.0f} {nearest_town_label(pt.lat, pt.lon)}"
-        out.append((label, pt.lat, pt.lon, (t - timedelta(hours=1), t + timedelta(hours=1)), trip.origin.timezone))
+        out.append((label, pt.lat, pt.lon, (t - timedelta(hours=1), t + timedelta(hours=1)),
+                    trip.origin.timezone, "route"))
     return out
 
 
 def parse(data: List[dict], locs: List[Loc], mode: Mode) -> List[Signal]:
     signals = []
     now = datetime.now(timezone.utc)
-    for (label, _, _, window, tz), loc in zip(locs, data):
+    for (label, _, _, window, tz, area), loc in zip(locs, data):
         h = loc["hourly"]
         hazards: List[Tuple[Severity, str, datetime]] = []
         peak_gust, total_precip, n = 0.0, 0.0, 0
@@ -75,7 +77,7 @@ def parse(data: List[dict], locs: List[Loc], mode: Mode) -> List[Signal]:
         link = "https://open-meteo.com/en/docs"
         if n == 0:
             signals.append(Signal(
-                source=SOURCE, location=label, category="weather", severity=Severity.none,
+                source=SOURCE, area=area, location=label, category="weather", severity=Severity.none,
                 headline=f"{label}: travel time is outside the forecast range",
                 url=link, observed_at=now, valid_for_travel_date=False,
             ))
@@ -91,7 +93,7 @@ def parse(data: List[dict], locs: List[Loc], mode: Mode) -> List[Signal]:
             sev = Severity.none
             headline = f"{label}: no significant weather forecast"
         signals.append(Signal(
-            source=SOURCE, location=label, category="weather", severity=sev, headline=headline,
+            source=SOURCE, area=area, location=label, category="weather", severity=sev, headline=headline,
             detail=(f"{n} forecast hours checked; peak gust {peak_gust:.0f} km/h, "
                     f"total precipitation {total_precip:.1f} mm"),
             url=link, observed_at=now,
