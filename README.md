@@ -111,6 +111,24 @@ look the same to an ops user.
   clear alternate ("consider flying via EWR"). For drives, it names the
   affected stretches. Every failed source becomes a "verify manually" step.
 
+**Interface (step 6)**: [static/index.html](static/index.html)
+- One static page, vanilla JS, no build step: nothing to install beyond
+  the Python server, and it's easy to read in a review.
+- Laid out in the order an ops person asks the questions: *what did you
+  understand* (resolved cities, airports and date echoed back) → *how bad*
+  (score, level, confidence, summary labelled AI or rule-based) → *what do I
+  do* (action steps) → *why* (point-by-point breakdown) → *show me*
+  (evidence by Origin / Route / Destination, raw TAF/NOTAM/alert text, links
+  to each source) → *what was checked* (per-source status and latency).
+- "Checked and clear" items are folded away but countable, so quiet results
+  still show their work. Context-only items (e.g. live FAA delays for a
+  future trip) are tagged as not counted in the score.
+- All external text is HTML-escaped and only http(s) links are rendered:
+  NWS alert text is third-party input.
+- Results live in the URL (`/?origin=…&destination=…&date=…&mode=…`), so an
+  assessment can be shared as a link and re-run.
+- Light/dark mode; verified at desktop width and at a 390 px phone width.
+
 ## Testing
 
 ```bash

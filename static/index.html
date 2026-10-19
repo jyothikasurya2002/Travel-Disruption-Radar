@@ -4,9 +4,348 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Travel Disruption Radar</title>
+  <style>
+    :root {
+      --bg: #f6f7f9; --panel: #ffffff; --ink: #14171c; --muted: #5d6573; --line: #e3e6eb;
+      --accent: #2456d6; --accent-ink: #ffffff; --chip: #eef1f5;
+      --sev0: #2f8a57; --sev1: #6b8f1a; --sev2: #c98a00; --sev3: #d9622b; --sev4: #c62a3a;
+      --sev0-bg: #e7f4ec; --sev1-bg: #eef4dd; --sev2-bg: #fdf3d8; --sev3-bg: #fde8dd; --sev4-bg: #fbe1e4;
+      --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0f1216; --panel: #171b21; --ink: #e8ebf0; --muted: #9aa3b2; --line: #2a3039;
+        --accent: #6f95ff; --accent-ink: #0f1216; --chip: #222831;
+        --sev0: #4cc082; --sev1: #a3c94a; --sev2: #f0b429; --sev3: #f08a55; --sev4: #f2636f;
+        --sev0-bg: #16271e; --sev1-bg: #1f2714; --sev2-bg: #2b2412; --sev3-bg: #2d1c14; --sev4-bg: #2e1519;
+        --shadow: none;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #0f1216; --panel: #171b21; --ink: #e8ebf0; --muted: #9aa3b2; --line: #2a3039;
+      --accent: #6f95ff; --accent-ink: #0f1216; --chip: #222831;
+      --sev0: #4cc082; --sev1: #a3c94a; --sev2: #f0b429; --sev3: #f08a55; --sev4: #f2636f;
+      --sev0-bg: #16271e; --sev1-bg: #1f2714; --sev2-bg: #2b2412; --sev3-bg: #2d1c14; --sev4-bg: #2e1519;
+      --shadow: none;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 24px 16px 64px; }
+    header h1 { margin: 0; font-size: 22px; letter-spacing: -.01em; }
+    header p { margin: 4px 0 0; color: var(--muted); }
+
+    .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); padding: 18px; }
+    .stack > * + * { margin-top: 14px; }
+
+    /* form */
+    form { margin-top: 18px; display: grid; gap: 12px; grid-template-columns: 1fr 1fr 1fr auto; align-items: end; }
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 4px; }
+    input[type=text] {
+      width: 100%; padding: 10px 12px; font: inherit; color: var(--ink); background: var(--bg);
+      border: 1px solid var(--line); border-radius: 8px;
+    }
+    input[type=text]:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+    .row2 { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+    .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .seg input { position: absolute; opacity: 0; pointer-events: none; }
+    .seg label { margin: 0; padding: 8px 14px; cursor: pointer; text-transform: none; letter-spacing: 0; font-size: 14px; color: var(--ink); font-weight: 500; }
+    .seg input:checked + label { background: var(--accent); color: var(--accent-ink); }
+    .seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: -2px; }
+    button.primary {
+      padding: 10px 20px; font: inherit; font-weight: 600; border: 0; border-radius: 8px;
+      background: var(--accent); color: var(--accent-ink); cursor: pointer; white-space: nowrap;
+    }
+    button.primary:disabled { opacity: .6; cursor: progress; }
+    .demos { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+    .demos span { font-size: 13px; color: var(--muted); margin-right: 2px; }
+    .chip {
+      font: inherit; font-size: 13px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line);
+      background: var(--chip); color: var(--ink); cursor: pointer;
+    }
+    .chip:hover { border-color: var(--accent); }
+
+    /* states */
+    #status { margin-top: 18px; }
+    .loading { display: flex; gap: 10px; align-items: center; color: var(--muted); }
+    .spinner { width: 18px; height: 18px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error { border-color: var(--sev4); background: var(--sev4-bg); }
+
+    /* results */
+    .understood { font-size: 14px; color: var(--muted); }
+    .understood b { color: var(--ink); font-weight: 600; }
+    .hero { display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: center; }
+    .gauge { position: relative; width: 120px; height: 120px; }
+    .gauge svg { transform: rotate(-90deg); }
+    .gauge .num { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+    .gauge .num strong { font-size: 32px; line-height: 1; }
+    .gauge .num small { color: var(--muted); font-size: 12px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+    .badge { font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--chip); }
+    .summary { font-size: 16px; margin: 0; }
+    .ai-tag { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 0 0 10px; }
+    .action-head { font-size: 17px; font-weight: 700; margin: 0 0 8px; }
+    ul.clean { margin: 0; padding-left: 18px; }
+    ul.clean li + li { margin-top: 4px; }
+    table.drivers { width: 100%; border-collapse: collapse; font-size: 14px; }
+    table.drivers td { padding: 6px 0; border-top: 1px solid var(--line); vertical-align: top; }
+    table.drivers tr:first-child td { border-top: 0; }
+    table.drivers td.pts { width: 48px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    table.drivers td.total { font-weight: 700; }
+
+    .area + .area { margin-top: 18px; }
+    .area h3 { font-size: 15px; margin: 0 0 8px; }
+    .area h3 small { color: var(--muted); font-weight: 400; }
+    ul.sigs { list-style: none; margin: 0; padding: 0; }
+    .sig { display: grid; grid-template-columns: 10px 1fr; gap: 10px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); }
+    .sig + .sig { margin-top: 6px; }
+    .sig .dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; }
+    .sig .hl { font-weight: 600; overflow-wrap: anywhere; }
+    .sig .meta { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 10px; margin-top: 2px; }
+    .sig .meta a { color: var(--accent); }
+    .tag { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding: 1px 6px; border-radius: 4px; background: var(--chip); color: var(--muted); }
+    details.raw summary { cursor: pointer; font-size: 13px; color: var(--muted); margin-top: 4px; }
+    details.raw pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; margin: 6px 0 0; max-height: 260px; overflow: auto; }
+    details.clear { margin-top: 6px; }
+    details.clear > summary { cursor: pointer; font-size: 14px; color: var(--sev0); padding: 4px 0; }
+
+    .sources { display: flex; flex-wrap: wrap; gap: 8px; }
+    .src { font-size: 13px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); display: inline-flex; gap: 6px; align-items: center; }
+    .src.ok::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sev0); }
+    .src.fail { border-color: var(--sev4); color: var(--sev4); }
+    .src.fail::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--sev4); }
+    .foot { font-size: 12px; color: var(--muted); }
+
+    .s0 { --c: var(--sev0); --cb: var(--sev0-bg); } .s1 { --c: var(--sev1); --cb: var(--sev1-bg); }
+    .s2 { --c: var(--sev2); --cb: var(--sev2-bg); } .s3 { --c: var(--sev3); --cb: var(--sev3-bg); }
+    .s4 { --c: var(--sev4); --cb: var(--sev4-bg); }
+    .sig.s1, .sig.s2, .sig.s3, .sig.s4 { background: var(--cb); border-color: transparent; }
+    .dot { background: var(--c); }
+    .badge.lvl { background: var(--cb); color: var(--c); }
+
+    /* Grid/flex children default to min-width:auto and won't shrink below
+       long unbroken text (route labels, NOTAMs), so let them. */
+    form > *, .grid2 > *, .hero > *, .sig > div { min-width: 0; }
+    .understood, .summary, .meta span { overflow-wrap: anywhere; }
+
+    @media (max-width: 760px) {
+      form { grid-template-columns: 1fr; }
+      .grid2 { grid-template-columns: 1fr; }
+      .hero { grid-template-columns: 1fr; justify-items: start; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Travel Disruption Radar</h1>
-  <p>Scaffold is running. UI comes in step 6.</p>
+<div class="wrap">
+  <header>
+    <h1>Travel Disruption Radar</h1>
+    <p>Enter a U.S. trip to see potential disruptions, the evidence behind them, and what to do.</p>
+  </header>
+
+  <form id="trip" class="panel" autocomplete="off">
+    <div><label for="origin">From</label><input id="origin" type="text" placeholder="New York, SFO, Portland, ME" required></div>
+    <div><label for="destination">To</label><input id="destination" type="text" placeholder="San Francisco" required></div>
+    <div><label for="date">When</label><input id="date" type="text" value="tomorrow" placeholder="tomorrow, friday, 10/24"></div>
+    <button class="primary" id="go" type="submit">Assess trip</button>
+    <div class="row2">
+      <div class="seg" role="radiogroup" aria-label="Travel mode">
+        <input type="radio" name="mode" id="m-flight" value="flight" checked><label for="m-flight">✈ Flight</label>
+        <input type="radio" name="mode" id="m-drive" value="drive"><label for="m-drive">🚗 Drive</label>
+      </div>
+      <div class="demos" id="demos"><span>Try:</span></div>
+    </div>
+  </form>
+
+  <div id="status" aria-live="polite"></div>
+  <main id="result" class="stack" style="margin-top:18px"></main>
+</div>
+
+<script>
+const SEV_LABEL = ["Clear", "Low", "Moderate", "High", "Severe"];
+const LEVEL_SEV = { Minimal: 0, Low: 1, Moderate: 2, High: 3, Severe: 4 };
+const DEMOS = [
+  ["New York", "San Francisco", "tomorrow", "flight"],
+  ["Norfolk, VA", "Atlanta", "today", "flight"],
+  ["Denver", "Salt Lake City", "in 2 days", "drive"],
+  ["Chicago", "Boston", "in 10 days", "flight"],
+];
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const safeUrl = (u) => (/^https?:\/\//i.test(u || "") ? u : null);
+const fmtTime = (iso) => {
+  const d = new Date(iso);
+  return isNaN(d) ? "" : d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+};
+
+// --- form -----------------------------------------------------------------
+for (const [o, d, when, mode] of DEMOS) {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "chip";
+  b.textContent = `${o} → ${d}, ${when}${mode === "drive" ? " (drive)" : ""}`;
+  b.onclick = () => { fill(o, d, when, mode); run(); };
+  $("#demos").appendChild(b);
+}
+
+function fill(o, d, when, mode) {
+  $("#origin").value = o; $("#destination").value = d; $("#date").value = when;
+  $(`#m-${mode}`).checked = true;
+}
+function current() {
+  return {
+    origin: $("#origin").value.trim(), destination: $("#destination").value.trim(),
+    date: $("#date").value.trim() || "tomorrow",
+    mode: document.querySelector("input[name=mode]:checked").value,
+  };
+}
+
+$("#trip").addEventListener("submit", (e) => { e.preventDefault(); run(); });
+
+async function run() {
+  const req = current();
+  if (!req.origin || !req.destination) return;
+  history.replaceState(null, "", "?" + new URLSearchParams(req)); // shareable link
+  $("#go").disabled = true;
+  $("#result").innerHTML = "";
+  $("#status").innerHTML = `<div class="panel loading"><div class="spinner"></div>
+    Checking ${req.mode === "drive" ? "weather and alerts along the route" : "FAA status, airport forecasts, weather alerts and forecasts"}…</div>`;
+  try {
+    const res = await fetch("/api/assess", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(req),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Request failed.");
+    $("#status").innerHTML = "";
+    render(data);
+  } catch (err) {
+    $("#status").innerHTML = `<div class="panel error"><strong>Couldn't assess this trip.</strong> ${esc(err.message)}</div>`;
+  } finally {
+    $("#go").disabled = false;
+  }
+}
+
+// --- rendering ------------------------------------------------------------
+function render(a) {
+  const t = a.trip, flight = t.mode === "flight";
+  const sev = LEVEL_SEV[a.level] ?? 0;
+  const place = (p) => `<b>${esc(p.name)}</b>${flight ? ` (${p.airports.map((x) => esc(x.iata)).join(", ")})` : ""}`;
+  const date = new Date(t.travel_date + "T12:00:00").toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+  const route = t.route ? ` · ${Math.round(t.route.distance_km)} km, ~${t.route.duration_hours} h driving` : "";
+
+  $("#result").innerHTML = `
+    <div class="understood">${flight ? "✈" : "🚗"} ${place(t.origin)} → ${place(t.destination)} · <b>${esc(date)}</b>${esc(route)}</div>
+
+    <section class="panel hero s${sev}">
+      ${gauge(a.score, sev)}
+      <div>
+        <div class="badges">
+          <span class="badge lvl">${esc(a.level)} risk</span>
+          <span class="badge">Confidence: ${esc(a.confidence)}</span>
+        </div>
+        <p class="summary">${esc(a.summary)}</p>
+        <div class="ai-tag">${a.summary_source === "llm"
+          ? "✦ AI-written summary (Claude), checked against the evidence below"
+          : "Rule-based summary" + (a.summary_note ? ` · ${esc(a.summary_note)}` : "")}</div>
+      </div>
+    </section>
+
+    <div class="grid2">
+      <section class="panel">
+        <h2>Recommended action</h2>
+        <p class="action-head">${esc(a.action.headline)}</p>
+        <ul class="clean">${a.action.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul>
+      </section>
+      <section class="panel">
+        <h2>Why this score</h2>
+        ${a.drivers.length ? `<table class="drivers">
+          ${a.drivers.map((d) => `<tr><td class="pts">+${d.points}</td><td>${esc(d.reason)}</td></tr>`).join("")}
+          <tr><td class="pts total">${a.score}</td><td class="total">Total (out of 100)</td></tr></table>`
+          : `<p style="margin:0">No hazards found for the travel window, so the score is 0.</p>`}
+        <h2 style="margin-top:16px">Confidence: ${esc(a.confidence)}</h2>
+        <ul class="clean">${a.confidence_reasons.map((r) => `<li>${esc(r)}</li>`).join("")}</ul>
+      </section>
+    </div>
+
+    <section class="panel">
+      <h2>Evidence</h2>
+      ${evidence(a)}
+    </section>
+
+    <section class="panel">
+      <h2>Sources checked</h2>
+      <div class="sources">${a.sources.map((s) => `<span class="src ${s.ok ? "ok" : "fail"}" title="${esc(s.error || "")}">
+        ${esc(s.source)} · ${s.ok ? `${s.latency_ms} ms` : "unavailable"}</span>`).join("")}</div>
+      <p class="foot" style="margin:10px 0 0">Generated ${esc(fmtTime(a.generated_at))}. Conditions change, so re-check before travel.</p>
+    </section>`;
+}
+
+function gauge(score, sev) {
+  const r = 52, c = 2 * Math.PI * r, filled = (Math.max(score, 2) / 100) * c;
+  return `<div class="gauge s${sev}" role="img" aria-label="Risk score ${score} out of 100">
+    <svg width="120" height="120" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--line)" stroke-width="10"/>
+      <circle cx="60" cy="60" r="${r}" fill="none" stroke="var(--c)" stroke-width="10" stroke-linecap="round"
+        stroke-dasharray="${filled} ${c}"/>
+    </svg>
+    <div class="num"><strong>${score}</strong><small>/ 100</small></div>
+  </div>`;
+}
+
+function evidence(a) {
+  const t = a.trip;
+  const areas = [
+    ["origin", `Origin`, t.origin.name],
+    ["route", `Along the route`, ""],
+    ["destination", `Destination`, t.destination.name],
+  ];
+  return areas.map(([key, title, name]) => {
+    const sigs = a.signals.filter((s) => s.area === key);
+    if (!sigs.length) return "";
+    const found = sigs.filter((s) => s.severity > 0).sort((x, y) => y.severity - x.severity);
+    const clear = sigs.filter((s) => s.severity === 0);
+    return `<div class="area">
+      <h3>${title} ${name ? `<small>· ${esc(name)}</small>` : ""}</h3>
+      ${found.length ? `<ul class="sigs">${found.map(signal).join("")}</ul>` : ""}
+      ${clear.length ? `<details class="clear" ${found.length ? "" : "open"}>
+        <summary>✓ ${clear.length} check${clear.length > 1 ? "s" : ""} found nothing significant</summary>
+        <ul class="sigs">${clear.map(signal).join("")}</ul></details>` : ""}
+    </div>`;
+  }).join("");
+}
+
+function signal(s) {
+  const url = safeUrl(s.url);
+  return `<li class="sig s${s.severity}">
+    <span class="dot"></span>
+    <div>
+      <div class="hl">${esc(s.headline)}</div>
+      <div class="meta">
+        <span class="tag">${SEV_LABEL[s.severity]}</span>
+        <span>${esc(s.source)}</span>
+        <span>${esc(s.location)}</span>
+        <span>as of ${esc(fmtTime(s.observed_at))}</span>
+        ${s.valid_for_travel_date ? "" : `<span class="tag" title="Shown for context; not counted in the score">Context only</span>`}
+        ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">source ↗</a>` : ""}
+      </div>
+      ${s.detail ? `<details class="raw"><summary>Raw evidence</summary><pre>${esc(s.detail)}</pre></details>` : ""}
+    </div>
+  </li>`;
+}
+
+// Deep link: /?origin=…&destination=…&date=…&mode=… runs immediately.
+const q = new URLSearchParams(location.search);
+if (q.get("origin") && q.get("destination")) {
+  fill(q.get("origin"), q.get("destination"), q.get("date") || "tomorrow", q.get("mode") === "drive" ? "drive" : "flight");
+  run();
+}
+</script>
 </body>
 </html>
