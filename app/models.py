@@ -41,6 +41,7 @@ class Place(BaseModel):
     state: str
     lat: float
     lon: float
+    timezone: str                    # IANA, e.g. "America/New_York"
     airports: List[Airport] = []
 
 
@@ -55,6 +56,16 @@ class DriveRoute(BaseModel):
     distance_km: float
     duration_hours: float
     samples: List[RoutePoint]        # points along the road we check weather at
+
+
+class Trip(BaseModel):
+    """A fully resolved trip: what every connector receives."""
+
+    origin: Place
+    destination: Place
+    travel_date: date
+    mode: Mode
+    route: Optional[DriveRoute] = None
 
 
 class Signal(BaseModel):

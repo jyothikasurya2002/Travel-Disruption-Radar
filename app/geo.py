@@ -95,13 +95,15 @@ async def geocode(text: str) -> Place:
         raise LocationError("Please enter a place.")
 
     # An airport code typed directly ("SFO", "KJFK") is the most precise input.
+    # We still geocode its city to learn the timezone, then pin that airport.
     if raw.isalpha() and len(raw) in (3, 4) and raw.lower() not in ALIASES:
         ap = airport_by_code(raw)
         if ap:
-            return Place(
-                query=raw, name=f"{ap.city}, {ap.state}", state=ap.state,
-                lat=ap.lat, lon=ap.lon, airports=[ap.model_copy(update={"distance_km": 0.0})],
-            )
+            city = await geocode(f"{ap.city}, {ap.state}")
+            return city.model_copy(update={
+                "query": raw, "lat": ap.lat, "lon": ap.lon,
+                "airports": [ap.model_copy(update={"distance_km": 0.0})],
+            })
 
     expanded = ALIASES.get(raw.lower(), raw)
     city, _, state_hint = (p.strip() for p in expanded.partition(","))
@@ -131,5 +133,13 @@ async def geocode(text: str) -> Place:
         state=state_code,
         lat=best["latitude"],
         lon=best["longitude"],
+        timezone=best.get("timezone") or "America/New_York",
         airports=airports_near(best["latitude"], best["longitude"]),
     )
+
+
+def nearest_town_label(lat: float, lon: float) -> str:
+    """Cheap human label for a point on a road ("near Cheyenne, WY"), using the
+    bundled airport list instead of another reverse-geocoding API call."""
+    ap = min(load_airports(), key=lambda a: haversine_km(lat, lon, a.lat, a.lon))
+    return f"near {ap.city}, {ap.state}"

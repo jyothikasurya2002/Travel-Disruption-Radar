@@ -64,11 +64,55 @@ look the same to an ops user.
   estimated arrival time at each, so weather is checked for *when you'll be
   there*, not just at the endpoints. Assumes constant speed, non-stop.
 
+**Connectors (step 3)**
+- *Concurrent and isolated.* All sources run in parallel (~1-2 s total) with
+  a 20 s budget each. A failing source becomes a `SourceStatus(ok=False)`,
+  never a crash and never a silent "all clear".
+- *"Checked and clear" is evidence too.* Connectors emit severity-0 signals
+  ("JFK: no ground stops…") so the user sees what was actually verified.
+- *Exposure windows.* A hazard only counts if it overlaps when the traveller
+  is there: 05:00-24:00 local at each airport, or ±2 h around the ETA at each
+  road sample (departure assumed 08:00 local).
+- *FAA:* NOTAM closures have exact UTC windows, so they're predictive.
+  GA-only restrictions (e.g. LAX "CLSD TO NON SKED TRANSIENT GA", active for
+  months) and overnight closures (LGA nightly) are filtered out. Live ground
+  stops/delays usually clear within hours, so for future dates they're shown
+  as context, capped at low severity. Parsing keys off element tags from the
+  FAA's published `AirportStatus.dtd`, not free-text section names.
+- *TAF:* thresholds are the FAA flight categories (LIFR/IFR/MVFR) plus
+  thunderstorms, freezing precipitation, snow and gusts, the conditions that
+  actually trigger ground delay programs. PROB30/40 groups are downgraded one
+  level. TAFs only reach ~24-30 h, and the tool says so instead of guessing.
+- *NWS:* queried per point, so only zones on the trip count. ~70% of active
+  U.S. alerts are marine; those and agricultural ones (frost/freeze) are
+  dropped. Travel-critical events get a severity floor (Dense Fog Advisory →
+  moderate, Blizzard Warning → severe); watches are capped at moderate.
+- *Open-Meteo:* the only source covering 16 days and every road sample, in
+  one batched request. Fog matters for flights; steady rain only for drives.
+
+## Testing
+
+```bash
+.venv/bin/python -m pytest -q
+```
+
+The live FAA feed is often quiet, so `tests/test_faa.py` uses fixtures
+built from the DTD to prove ground stops, delay programs, delays and closure
+filtering work. Rule tests cover TAF categories, NWS filtering/severity and
+Open-Meteo thresholds.
+
+Debug endpoints: `/api/resolve` (what we understood) and `/api/signals`
+(raw evidence per source, before scoring).
+
 ## Assumptions
 
 - "Today" is the server's local date; a real deployment should use the
   origin's timezone.
 - Long drives (e.g. NY → SF, ~51 h) are timed as if driven non-stop.
+- No flight number or departure time is asked for, so a flight is exposed
+  to the whole operating day at both ends; drives depart at 08:00 local.
+- The flight path itself (en-route weather) isn't checked; origin and
+  destination conditions drive the vast majority of delays.
 - Scope is the contiguous U.S. + AK/HI/PR airports present in OurAirports.
 
 ## How and where AI was used

@@ -66,11 +66,15 @@ def _parse(s: str, today: date) -> Optional[date]:
             pass
 
     # Year-less formats ("10/24", "oct 24"): assume the next occurrence.
+    # The year is appended before parsing so Feb 29 works (and Python 3.15+
+    # doesn't reject year-less strptime).
     for fmt in ("%m/%d", "%b %d", "%B %d", "%d %b", "%d %B"):
-        try:
-            parsed = datetime.strptime(s.replace(",", ""), fmt).date()
-        except ValueError:
-            continue
-        candidate = parsed.replace(year=today.year)
-        return candidate if candidate >= today else candidate.replace(year=today.year + 1)
+        for year in (today.year, today.year + 1):
+            try:
+                candidate = datetime.strptime(f"{s.replace(',', '')} {year}", f"{fmt} %Y").date()
+            except ValueError:
+                continue
+            if candidate >= today:
+                return candidate
+
     return None
