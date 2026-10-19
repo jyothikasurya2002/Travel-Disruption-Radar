@@ -138,7 +138,50 @@ Debug endpoints: `/api/resolve` (what we understood) and `/api/signals`
 
 ## How and where AI was used
 
-_Filled in as we build._
+**1. Inside the product: the plain-English briefing only** ([app/summary.py](app/summary.py))
+
+The score, level, confidence and action come from the deterministic rules
+engine. Claude (`claude-opus-5-5`) only turns that result into 2-4 sentences
+an ops person can act on. That boundary is deliberate: a risk score must be
+reproducible and auditable, and an LLM is neither. Writing clear, jargon-free
+prose from structured facts is where it adds real value.
+
+Guardrails:
+- *Grounded input:* the model gets the computed assessment plus evidence
+  signals with ids (S1, S2…). It isn't asked to find anything out.
+- *Structured output* (`output_config.format` JSON schema):
+  `{summary, cited_signals}`, so it must say which evidence it used.
+- *Grounding check* before display. It rejects text that cites
+  non-existent evidence, cites nothing for a non-zero risk, names an airport
+  not on the trip, or quotes a different score than the engine computed.
+- *Graceful degradation:* no key, timeout (30 s, 1 retry), rate limit,
+  refusal, malformed JSON or a failed check all fall back to the rule-based
+  summary. `summary_source` and `summary_note` tell the UI which one
+  you're reading and why.
+- *Refusal fallback:* `fallbacks: "default"` (server-side) re-runs a
+  safety-declined request on Anthropic's recommended fallback model.
+- *Effort `low`:* summarising given facts is simple; low effort keeps
+  latency and cost down.
+- Tested against a mock Claude endpoint (`tests/test_summary.py`): request
+  shape, plus every failure and hallucination path. No key needed.
+
+**2. Building it: Claude Code as a pair programmer**
+
+I used Claude Code throughout, step by step: I set the scope and stack and
+made the product decisions, it drafted code, and every step was checked
+against live data and tests before moving on. Things that verification
+caught, where the first AI-written version was wrong:
+- Pinned `anthropic==0.42.0` from memory; the current SDK is 1.x.
+  Corrected against the official API reference before writing LLM code.
+- "Most populous match" turned *Aspen* into Aspen Hill, MD.
+- Corroboration counted an Atlanta alert as confirming Norfolk winds.
+- Assumed FAA section names; switched to the tags guaranteed by the FAA's
+  published DTD after reading it.
+- macOS system Python's old LibreSSL couldn't reach OSRM (environment, not
+  code).
+
+The lesson: AI is fast at producing plausible code, and the work is in
+checking it against reality: real payloads, published schemas, live runs.
 
 ## Before deploying to real users
 

@@ -125,6 +125,7 @@ class Assessment(BaseModel):
     action: Action
     summary: str
     summary_source: str              # "llm" | "rules"
+    summary_note: Optional[str] = None  # why the rules fallback was used, if it was
     signals: List[Signal]
     sources: List[SourceStatus]
     generated_at: datetime
