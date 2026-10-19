@@ -1,0 +1,503 @@
+iata,icao,name,city,state,type,lat,lon
+ABE,KABE,Lehigh Valley International Airport,Allentown/Bethlehem,PA,medium_airport,40.651773,-75.442797
+ABI,KABI,Abilene Regional Airport,Abilene,TX,medium_airport,32.4113006592,-99.68190002440001
+ABL,PAFM,Ambler Airport,Ambler,AK,medium_airport,67.105529,-157.855339
+ABQ,KABQ,Albuquerque International Sunport,Albuquerque,NM,large_airport,35.039976,-106.608925
+ABR,KABR,Aberdeen Regional Airport,Aberdeen,SD,medium_airport,45.449100494384766,-98.42179870605469
+ABY,KABY,Southwest Georgia Regional Airport,Albany,GA,medium_airport,31.532946,-84.196215
+ACK,KACK,Nantucket Memorial Airport,Nantucket,MA,medium_airport,41.25310135,-70.06020355
+ACT,KACT,Waco Regional Airport,Waco,TX,medium_airport,31.611299514770508,-97.23049926757812
+ACV,KACV,California Redwood Coast-Humboldt County Airport,Arcata/Eureka,CA,medium_airport,40.978101,-124.109
+ACY,KACY,Atlantic City International Airport,Atlantic City,NJ,medium_airport,39.456201,-74.577511
+ADK,PADK,Adak Airport,Adak,AK,medium_airport,51.883564,-176.642783
+ADQ,PADQ,Kodiak Airport,Kodiak,AK,medium_airport,57.75,-152.4940033
+AEX,KAEX,Alexandria International Airport,Alexandria,LA,medium_airport,31.325828,-92.546702
+AGS,KAGS,Augusta Regional At Bush Field,Augusta,GA,medium_airport,33.3699,-81.9645
+AIA,KAIA,Alliance Municipal Airport,Alliance,NE,medium_airport,42.052543,-102.803965
+AIN,PAWI,Wainwright Airport,Wainwright,AK,medium_airport,70.638,-159.994995
+AKN,PAKN,King Salmon Airport,King Salmon,AK,medium_airport,58.677845,-156.651965
+AKP,PAKP,Anaktuvuk Pass Airport,Anaktuvuk Pass,AK,medium_airport,68.133598,-151.742996
+ALB,KALB,Albany International Airport,Albany,NY,large_airport,42.748299,-73.801697
+ALO,KALO,Waterloo Regional Airport,Waterloo,IA,medium_airport,42.557098388671875,-92.40029907226562
+ALS,KALS,San Luis Valley Regional Airport/Bergman Field,Alamosa,CO,medium_airport,37.434898,-105.866997
+ALW,KALW,Walla Walla Regional Airport,Walla Walla,WA,medium_airport,46.09489822,-118.288002
+AMA,KAMA,Rick Husband Amarillo International Airport,Amarillo,TX,medium_airport,35.217857,-101.706444
+ANC,PANC,Ted Stevens Anchorage International Airport,Anchorage,AK,large_airport,61.179004,-149.992561
+ANI,PANI,Aniak Airport,Aniak,AK,medium_airport,61.581600189208984,-159.54299926757812
+ANV,PANV,Anvik Airport,Anvik,AK,medium_airport,62.646702,-160.190994
+AOO,KAOO,Altoona Blair County Airport,Altoona,PA,medium_airport,40.296398,-78.32
+APN,KAPN,Alpena County Regional Airport,Alpena,MI,medium_airport,45.0780983,-83.56030273
+ARC,PARC,Arctic Village Airport,Arctic Village,AK,medium_airport,68.1147,-145.578995
+ART,KART,Watertown International Airport,Watertown,NY,medium_airport,43.991901,-76.021698
+ASE,KASE,Aspen-Pitkin County Airport (Sardy Field),Aspen,CO,medium_airport,39.223202,-106.869003
+ATK,PATQ,Atqasuk Edward Burnell Sr Memorial Airport,Atqasuk,AK,medium_airport,70.46704,-157.436013
+ATL,KATL,Hartsfield Jackson Atlanta International Airport,Atlanta,GA,large_airport,33.6367,-84.428101
+ATW,KATW,Appleton International Airport,Appleton,WI,medium_airport,44.258515,-88.519
+ATY,KATY,Watertown Regional Airport,Watertown,SD,medium_airport,44.91400146,-97.15470123
+AUG,KAUG,Augusta State Airport,Augusta,ME,medium_airport,44.320598602299995,-69.7973022461
+AUS,KAUS,Austin Bergstrom International Airport,Austin,TX,large_airport,30.197535,-97.662015
+AVL,KAVL,Asheville Regional Airport,Asheville,NC,medium_airport,35.435488,-82.541853
+AVP,KAVP,Wilkes-Barre/Scranton International Airport,Wilkes-Barre/Scranton,PA,medium_airport,41.337064,-75.724232
+AZA,KIWA,Mesa Gateway Airport,Mesa,AZ,medium_airport,33.3078,-111.654999
+AZO,KAZO,Kalamazoo/Battle Creek International Airport,Kalamazoo,MI,medium_airport,42.232105,-85.549637
+BDL,KBDL,Bradley International Airport,Hartford,CT,large_airport,41.938555,-72.688016
+BED,KBED,Laurence G Hanscom Field,Bedford,MA,medium_airport,42.470001,-71.289001
+BET,PABE,Bethel Airport,Bethel,AK,medium_airport,60.77980042,-161.8379974
+BFD,KBFD,Bradford Regional Airport,Bradford,PA,medium_airport,41.8031005859375,-78.64009857177734
+BFF,KBFF,Western Neb. Rgnl/William B. Heilig Airport,Scottsbluff,NE,medium_airport,41.87400055,-103.5960007
+BFI,KBFI,King County International Airport - Boeing Field,Seattle,WA,medium_airport,47.527042,-122.29995
+BFL,KBFL,Meadows Field,Bakersfield,CA,medium_airport,35.433601,-119.056999
+BGM,KBGM,Greater Binghamton/Edwin A Link field,Binghamton,NY,medium_airport,42.20869827,-75.97979736
+BGR,KBGR,Bangor International Airport,Bangor,ME,medium_airport,44.806364,-68.826668
+BHB,KBHB,Hancock County-Bar Harbor Airport,Bar Harbor,ME,medium_airport,44.45000076,-68.3615036
+BHM,KBHM,Birmingham-Shuttlesworth International Airport,Birmingham,AL,large_airport,33.562877,-86.750712
+BIH,KBIH,Eastern Sierra Regional Airport,Bishop,CA,medium_airport,37.3731,-118.363998
+BIL,KBIL,Billings Logan International Airport,Billings,MT,medium_airport,45.808932,-108.541242
+BIS,KBIS,Bismarck Municipal Airport,Bismarck,ND,medium_airport,46.772734,-100.746874
+BJC,KBJC,Rocky Mountain Metropolitan Airport,Denver,CO,medium_airport,39.908798,-105.116997
+BKG,KBBG,Branson Airport,Branson,MO,medium_airport,36.532082,-93.200544
+BKW,KBKW,Raleigh County Memorial Airport,Beaver,WV,medium_airport,37.7873,-81.124199
+BLD,KBVU,Boulder City Municipal Airport,Boulder City,NV,medium_airport,35.947161,-114.858799
+BLI,KBLI,Bellingham International Airport,Bellingham,WA,medium_airport,48.79280090332031,-122.53800201416016
+BLV,KBLV,Scott AFB/Midamerica Airport,Belleville,IL,medium_airport,38.5452,-89.835197
+BMI,KBMI,Central Illinois Regional Airport at Bloomington-Normal,Bloomington/Normal,IL,medium_airport,40.4771,-88.915901
+BNA,KBNA,Nashville International Airport,Nashville,TN,large_airport,36.1245,-86.6782
+BOI,KBOI,Boise Air Terminal/Gowen Field,Boise,ID,large_airport,43.5644,-116.223
+BOS,KBOS,Boston Logan International Airport,Boston,MA,large_airport,42.36197,-71.0079
+BPT,KBPT,Jack Brooks Regional Airport,Beaumont/Port Arthur,TX,medium_airport,29.9508,-94.020699
+BQK,KBQK,Brunswick Golden Isles Airport,Brunswick,GA,medium_airport,31.258801,-81.466499
+BRD,KBRD,Brainerd Lakes Regional Airport,Brainerd,MN,medium_airport,46.402861,-94.129727
+BRL,KBRL,Southeast Iowa Regional Airport,Burlington,IA,medium_airport,40.783199310302734,-91.12550354003906
+BRO,KBRO,Brownsville South Padre Island International Airport,Brownsville,TX,medium_airport,25.907238,-97.425235
+BRW,PABR,Wiley Post Will Rogers Memorial Airport,Utqiaġvik,AK,medium_airport,71.285402,-156.766008
+BTI,PABA,Barter Island Long Range Radar Station Airport,Barter Island,AK,medium_airport,70.134003,-143.582001
+BTM,KBTM,Bert Mooney Airport,Butte,MT,medium_airport,45.95479965209961,-112.49700164794922
+BTR,KBTR,Baton Rouge Metropolitan Airport,Baton Rouge,LA,medium_airport,30.533199,-91.149597
+BTV,KBTV,Patrick Leahy Burlington International Airport,Burlington,VT,medium_airport,44.471901,-73.153297
+BUF,KBUF,Buffalo Niagara International Airport,Buffalo,NY,large_airport,42.940498,-78.732201
+BUR,KBUR,Hollywood Burbank/Bob Hope Airport,Burbank,CA,large_airport,34.202834,-118.35805
+BWI,KBWI,Baltimore/Washington International Thurgood Marshall Airport,Baltimore,MD,large_airport,39.1754,-76.668297
+BZN,KBZN,Bozeman Yellowstone International Airport,Bozeman,MT,medium_airport,45.778853,-111.153711
+CAE,KCAE,Columbia Metropolitan Airport,Columbia,SC,medium_airport,33.938172,-81.123022
+CAK,KCAK,Akron Canton Regional Airport,Akron,OH,medium_airport,40.916099548339844,-81.44219970703125
+CCR,KCCR,Buchanan Field,Concord,CA,medium_airport,37.9897,-122.056999
+CDB,PACD,Cold Bay Airport,Cold Bay,AK,medium_airport,55.207871,-162.725029
+CDC,KCDC,Cedar City Regional Airport,Cedar City,UT,medium_airport,37.70100021362305,-113.0989990234375
+CDR,KCDR,Chadron Municipal Airport,Chadron,NE,medium_airport,42.837601,-103.095001
+CDV,PACV,Merle K (Mudhole) Smith Airport,Cordova,AK,medium_airport,60.491798,-145.477997
+CEC,KCEC,Jack Mc Namara Field Airport,Crescent City,CA,medium_airport,41.778929,-124.236403
+CEZ,KCEZ,Cortez Municipal Airport,Cortez,CO,medium_airport,37.303001,-108.627998
+CGI,KCGI,Cape Girardeau Regional Airport,Cape Girardeau,MO,medium_airport,37.2253,-89.570801
+CHA,KCHA,Chattanooga Metropolitan Airport (Lovell Field),Chattanooga,TN,medium_airport,35.035301,-85.203796
+CHO,KCHO,Charlottesville Albemarle Airport,Charlottesville,VA,medium_airport,38.13859939575195,-78.4529037475586
+CHS,KCHS,Charleston International Airport,Charleston,SC,large_airport,32.896159,-80.038151
+CID,KCID,The Eastern Iowa Airport,Cedar Rapids,IA,medium_airport,41.884701,-91.7108
+CIU,KCIU,Chippewa County International Airport,Kincheloe,MI,medium_airport,46.242038,-84.462082
+CKB,KCKB,North Central West Virginia Airport,Bridgeport,WV,medium_airport,39.2966,-80.228104
+CLD,KCRQ,McClellan-Palomar Airport,Carlsbad,CA,medium_airport,33.1283,-117.279999
+CLE,KCLE,Cleveland Hopkins International Airport,Cleveland,OH,large_airport,41.411701,-81.8498
+CLL,KCLL,Easterwood Field,College Station,TX,medium_airport,30.5886,-96.3638
+CLT,KCLT,Charlotte Douglas International Airport,Charlotte,NC,large_airport,35.2140007019043,-80.94309997558594
+CMH,KCMH,John Glenn Columbus International Airport,Columbus,OH,large_airport,39.998001,-82.891899
+CMI,KCMI,University of Illinois Willard Airport,Savoy,IL,medium_airport,40.039819,-88.276249
+CMX,KCMX,Houghton County Memorial Airport,Hancock,MI,medium_airport,47.168399810791016,-88.48909759521484
+CNM,KCNM,Cavern City Air Terminal,Carlsbad,NM,medium_airport,32.337501525878906,-104.26300048828125
+CNY,KCNY,Canyonlands Regional Airport,Moab,UT,medium_airport,38.755001,-109.754997
+COD,KCOD,Yellowstone Regional Airport,Cody,WY,medium_airport,44.520199,-109.024002
+COS,KCOS,City of Colorado Springs Municipal Airport,Colorado Springs,CO,large_airport,38.805801,-104.700996
+COU,KCOU,Columbia Regional Airport,Columbia,MO,medium_airport,38.8181,-92.219597
+CPR,KCPR,Casper-Natrona County International Airport,Casper,WY,medium_airport,42.907381,-106.461609
+CRP,KCRP,Corpus Christi International Airport,Corpus Christi,TX,medium_airport,27.770399,-97.501198
+CRW,KCRW,Yeager Airport,Charleston,WV,medium_airport,38.3731,-81.593201
+CSG,KCSG,Columbus Airport,Columbus,GA,medium_airport,32.516415,-84.939602
+CVG,KCVG,Cincinnati Northern Kentucky International Airport,Cincinnati / Covington,KY,large_airport,39.048801,-84.667801
+CVN,KCVN,Clovis Municipal Airport,Clovis,NM,medium_airport,34.426594,-103.078794
+CWA,KCWA,Central Wisconsin Airport,Mosinee,WI,medium_airport,44.777448,-89.670238
+CYS,KCYS,Cheyenne Regional Jerry Olson Field,Cheyenne,WY,medium_airport,41.155701,-104.811997
+DAB,KDAB,Daytona Beach International Airport,Daytona Beach,FL,medium_airport,29.18255,-81.059464
+DAL,KDAL,Dallas Love Field,Dallas,TX,large_airport,32.844776,-96.847653
+DAY,KDAY,James M. Cox Dayton International Airport,Dayton,OH,medium_airport,39.902401,-84.219398
+DBQ,KDBQ,Dubuque Regional Airport,Dubuque,IA,medium_airport,42.402,-90.709503
+DCA,KDCA,Ronald Reagan Washington National Airport,Washington,DC,large_airport,38.8521,-77.037697
+DDC,KDDC,Dodge City Regional Airport,Dodge City,KS,medium_airport,37.76340103149414,-99.9655990600586
+DEC,KDEC,Decatur Airport,Decatur,IL,medium_airport,39.834598541259766,-88.8656997680664
+DEN,KDEN,Denver International Airport,Denver,CO,large_airport,39.860027,-104.673792
+DFW,KDFW,Dallas Fort Worth International Airport,Dallas-Fort Worth,TX,large_airport,32.896801,-97.038002
+DHN,KDHN,Dothan Regional Airport,Dothan,AL,medium_airport,31.321300506591797,-85.44960021972656
+DIK,KDIK,Dickinson Theodore Roosevelt Regional Airport,Dickinson,ND,medium_airport,46.797533,-102.801905
+DJT,KDJT,President Donald J. Trump International Airport,West Palm Beach,FL,large_airport,26.683201,-80.095596
+DLG,PADL,Dillingham Airport,Dillingham,AK,medium_airport,59.04470062,-158.5050049
+DLH,KDLH,Duluth International Airport,Duluth,MN,medium_airport,46.841873,-92.198746
+DOV,KDOV,Dover Civil Air Terminal/Dover Air Force Base,Dover,DE,medium_airport,39.129501,-75.466003
+DRG,PADE,Deering Airport,Deering,AK,medium_airport,66.068901,-162.766914
+DRO,KDRO,Durango La Plata County Airport,Durango,CO,medium_airport,37.151501,-107.753998
+DSI,KDTS,Destin Executive Airport,Destin,FL,medium_airport,30.400101,-86.471497
+DSM,KDSM,Des Moines International Airport,Des Moines,IA,large_airport,41.534027,-93.656719
+DTW,KDTW,Detroit Metropolitan Wayne County Airport,Detroit,MI,large_airport,42.21377,-83.353786
+DUJ,KDUJ,DuBois Regional Airport,Dubois,PA,medium_airport,41.17829895,-78.8986969
+DUT,PADU,Tom Madsen (Dutch Harbor) Airport,Unalaska,AK,medium_airport,53.89881,-166.544996
+DVL,KDVL,Devils Lake Regional Airport,Devils Lake,ND,medium_airport,48.115454,-98.908796
+EAR,KEAR,Kearney Regional Airport,Kearney,NE,medium_airport,40.727001,-99.006798
+EAT,KEAT,Pangborn Memorial Airport,Wenatchee,WA,medium_airport,47.398899,-120.207001
+EAU,KEAU,Chippewa Valley Regional Airport,Eau Claire,WI,medium_airport,44.86579895019531,-91.48429870605469
+ECP,KECP,Northwest Florida Beaches International Airport,Panama City Beach,FL,medium_airport,30.357106,-85.795414
+EGE,KEGE,Eagle County Regional Airport,Eagle,CO,medium_airport,39.64260101,-106.9179993
+EGX,PAII,Egegik Airport,Egegik,AK,medium_airport,58.184386,-157.374873
+EKO,KEKO,Elko Regional Airport,Elko,NV,medium_airport,40.82490158081055,-115.79199981689453
+ELD,KELD,South Arkansas Regional Airport at Goodwin Field,El Dorado,AR,medium_airport,33.221001,-92.813301
+ELM,KELM,Elmira Corning Regional Airport,Elmira/Corning,NY,medium_airport,42.1599006652832,-76.8916015625
+ELP,KELP,El Paso International Airport,El Paso,TX,large_airport,31.809908,-106.375607
+EMK,PAEM,Emmonak Airport,Emmonak,AK,medium_airport,62.78609848,-164.4909973
+ENA,PAEN,Kenai Municipal Airport,Kenai,AK,medium_airport,60.570946,-151.245174
+ERI,KERI,Erie International Tom Ridge Field,Erie,PA,medium_airport,42.083127,-80.173867
+ESC,KESC,Delta County Airport,Escanaba,MI,medium_airport,45.723199,-87.088623
+ESD,KORS,Orcas Island Airport,Eastsound,WA,medium_airport,48.708199,-122.910004
+EUG,KEUG,Eugene Airport,Eugene,OR,medium_airport,44.124599,-123.211998
+EVV,KEVV,Evansville Regional Airport,Evansville,IN,medium_airport,38.0369987488,-87.5324020386
+EWB,KEWB,New Bedford Regional Airport,New Bedford,MA,medium_airport,41.67610168457031,-70.95690155029297
+EWN,KEWN,Coastal Carolina Regional Airport,New Bern,NC,medium_airport,35.0730018616,-77.04290008539999
+EWR,KEWR,Newark Liberty International Airport,Newark,NJ,large_airport,40.6894,-74.170545
+EYW,KEYW,Key West International Airport,Key West,FL,medium_airport,24.556119,-81.759579
+FAI,PAFA,Fairbanks International Airport,Fairbanks,AK,medium_airport,64.815102,-147.856003
+FAR,KFAR,Hector International Airport,Fargo,ND,medium_airport,46.9207,-96.815804
+FAT,KFAT,Fresno Yosemite International Airport,Fresno,CA,large_airport,36.775767,-119.718018
+FAY,KFAY,Fayetteville Regional Airport - Grannis Field,Fayetteville,NC,medium_airport,34.991199,-78.880302
+FCA,KGPI,Glacier Park International Airport,Kalispell,MT,medium_airport,48.310501,-114.255997
+FLG,KFLG,Flagstaff Pulliam Airport,Flagstaff,AZ,medium_airport,35.139757,-111.669826
+FLL,KFLL,Fort Lauderdale Hollywood International Airport,Fort Lauderdale,FL,large_airport,26.072599,-80.152702
+FLO,KFLO,Florence Regional Airport,Florence,SC,medium_airport,34.18539810180664,-79.7238998413086
+FNT,KFNT,Bishop International Airport,Flint,MI,medium_airport,42.969294,-83.743355
+FOD,KFOD,Fort Dodge Regional Airport,Fort Dodge,IA,medium_airport,42.552624,-94.191237
+FRD,KFHR,Friday Harbor Airport,Friday Harbor,WA,medium_airport,48.523654,-123.024645
+FSD,KFSD,Sioux Falls Regional Airport,Sioux Falls,SD,medium_airport,43.585463,-96.741152
+FSM,KFSM,Fort Smith Regional Airport,Fort Smith,AR,medium_airport,35.336601,-94.367401
+FTW,KFTW,Fort Worth Meacham International Airport,Fort Worth,TX,medium_airport,32.819919,-97.360818
+FWA,KFWA,Fort Wayne International Airport,Fort Wayne,IN,medium_airport,40.978896,-85.194465
+FYU,PFYU,Fort Yukon Airport,Fort Yukon,AK,medium_airport,66.571651,-145.249987
+GAL,PAGA,Edward G. Pitka Sr Airport,Galena,AK,medium_airport,64.736198,-156.936997
+GAM,PAGM,Gambell Airport,Gambell,AK,medium_airport,63.767694,-171.733303
+GCC,KGCC,Northeast Wyoming Regional Airport,Gillette,WY,medium_airport,44.3489,-105.539001
+GCK,KGCK,Garden City Regional Airport,Garden City,KS,medium_airport,37.9275016785,-100.723999023
+GCN,KGCN,Grand Canyon National Park Airport,Grand Canyon - Tusayan,AZ,medium_airport,35.9524,-112.147003
+GDV,KGDV,Dawson Community Airport,Glendive,MT,medium_airport,47.137658,-104.80691
+GEG,KGEG,Spokane International Airport,Spokane,WA,large_airport,47.6199,-117.533997
+GFK,KGFK,Grand Forks International Airport,Grand Forks,ND,medium_airport,47.949299,-97.176102
+GGG,KGGG,East Texas Regional Airport,Longview,TX,medium_airport,32.38399887084961,-94.71150207519531
+GGW,KGGW,Glasgow Valley County Airport Wokal Field,Glasgow,MT,medium_airport,48.212502,-106.614998
+GJT,KGJT,Grand Junction Regional Airport,Grand Junction,CO,medium_airport,39.126663,-108.529387
+GKN,PAGK,Gulkana Airport,Gulkana,AK,medium_airport,62.155859,-145.454662
+GLH,KGLH,Mid Delta Regional Airport,Greenville,MS,medium_airport,33.482899,-90.985603
+GNV,KGNV,Gainesville Regional Airport,Gainesville,FL,medium_airport,29.6900997162,-82.2717971802
+GPT,KGPT,Gulfport Biloxi International Airport,Gulfport,MS,medium_airport,30.405582,-89.069836
+GRB,KGRB,Austin Straubel International Airport,Green Bay,WI,medium_airport,44.483459,-88.130805
+GRI,KGRI,Central Nebraska Regional Airport,Grand Island,NE,medium_airport,40.967498779296875,-98.30960083007812
+GRK,KGRK,Killeen Regional Airport / Robert Gray Army Airfield,Fort Cavazos,TX,medium_airport,31.0672,-97.828903
+GRR,KGRR,Gerald R. Ford International Airport,Grand Rapids,MI,large_airport,42.880798,-85.522797
+GSO,KGSO,Piedmont Triad International Airport,Greensboro,NC,large_airport,36.09937,-79.937262
+GSP,KGSP,Greenville-Spartanburg International Airport,Greenville/Greer/Spartanburg,SC,medium_airport,34.895699,-82.218903
+GST,PAGS,Gustavus Airport,Gustavus,AK,medium_airport,58.4253006,-135.7070007
+GTF,KGTF,Great Falls International Airport,Great Falls,MT,medium_airport,47.481998,-111.371002
+GTR,KGTR,Golden Triangle Regional Airport,Columbus/W Point/Starkville,MS,medium_airport,33.450298,-88.5914
+GUC,KGUC,Gunnison Crested Butte Regional Airport,Gunnison,CO,medium_airport,38.534672,-106.934566
+GUP,KGUP,Gallup Municipal Airport,Gallup,NM,medium_airport,35.511653,-108.788166
+GYY,KGYY,Gary/Chicago International Airport,Gary,IN,medium_airport,41.617087,-87.413206
+HCR,PAHC,Holy Cross Airport,Holy Cross,AK,medium_airport,62.18830108642578,-159.77499389648438
+HDN,KHDN,Yampa Valley Airport,Hayden,CO,medium_airport,40.481201,-107.218002
+HGR,KHGR,Hagerstown Regional Richard A Henson Field,Hagerstown,MD,medium_airport,39.708771,-77.728014
+HHH,KHXD,Hilton Head Airport,Hilton Head Island,SC,medium_airport,32.2244,-80.697502
+HHR,KHHR,Jack Northrop Field Hawthorne Municipal Airport,Hawthorne,CA,medium_airport,33.922798,-118.334999
+HIB,KHIB,Range Regional Airport,Hibbing,MN,medium_airport,47.384831,-92.836905
+HII,KHII,Lake Havasu City Airport,Lake Havasu City,AZ,medium_airport,34.570506,-114.357745
+HLN,KHLN,Helena Regional Airport,Helena,MT,medium_airport,46.6068,-111.983002
+HNL,PHNL,Daniel K. Inouye International Airport,"Honolulu, Oahu",HI,large_airport,21.318387,-157.92567
+HNM,PHHN,Hana Airport,Hana,HI,medium_airport,20.795601,-156.014008
+HNS,PAHN,Haines Airport,Haines,AK,medium_airport,59.243921,-135.523925
+HOB,KHOB,Lea County Regional Airport,Hobbs,NM,medium_airport,32.6875,-103.217003
+HOM,PAHO,Homer Airport,Homer,AK,medium_airport,59.644456,-151.479235
+HOT,KHOT,Memorial Field Airport,Hot Springs,AR,medium_airport,34.4788,-93.096262
+HOU,KHOU,William P. Hobby Airport,Houston,TX,large_airport,29.645336,-95.276812
+HPN,KHPN,Westchester County Airport,White Plains,NY,medium_airport,41.06700134277344,-73.70760345458984
+HRL,KHRL,Valley International Airport,Harlingen,TX,medium_airport,26.228500366210938,-97.65440368652344
+HRO,KHRO,Boone County Airport,Harrison,AR,medium_airport,36.26150131225586,-93.15470123291016
+HSL,PAHL,Huslia Airport,Huslia,AK,medium_airport,65.697899,-156.350998
+HSV,KHSV,Huntsville International Airport,Huntsville,AL,medium_airport,34.636244,-86.774378
+HTS,KHTS,Tri-State Airport / Milton J. Ferguson Field,Huntington,WV,medium_airport,38.366699,-82.557999
+HVN,KHVN,Tweed New Haven Airport,New Haven,CT,medium_airport,41.262869,-72.887694
+HVR,KHVR,Havre City County Airport,Havre,MT,medium_airport,48.541387,-109.762859
+HYA,KHYA,Cape Cod Gateway Airport,Hyannis,MA,medium_airport,41.6693,-70.280403
+HYS,KHYS,Hays Regional Airport,Hays,KS,medium_airport,38.844521,-99.273148
+IAD,KIAD,Washington Dulles International Airport,Dulles,VA,large_airport,38.9445,-77.455803
+IAG,KIAG,Niagara Falls International Airport,Niagara Falls,NY,medium_airport,43.1073,-78.946198
+IAH,KIAH,George Bush Intercontinental Airport,Houston,TX,large_airport,29.9844,-95.3414
+IAN,PAIK,Bob Baker Memorial Airport,Kiana,AK,medium_airport,66.976128,-160.439014
+ICT,KICT,Wichita Dwight D. Eisenhower National Airport,Wichita,KS,medium_airport,37.650314,-97.428583
+IDA,KIDA,Idaho Falls Regional Airport,Idaho Falls,ID,medium_airport,43.514599,-112.070999
+ILG,KILG,Wilmington Airport,Wilmington,DE,medium_airport,39.678699,-75.606499
+ILI,PAIL,Iliamna Airport,Iliamna,AK,medium_airport,59.754398,-154.910996
+ILM,KILM,Wilmington International Airport,Wilmington,NC,medium_airport,34.272345,-77.905117
+IMT,KIMT,Ford Airport,Kingsford,MI,medium_airport,45.81911,-88.114557
+IND,KIND,Indianapolis International Airport,Indianapolis,IN,large_airport,39.7173,-86.294403
+INL,KINL,Falls International Airport,International Falls,MN,medium_airport,48.566200256347656,-93.4030990600586
+IPL,KIPL,Imperial County Airport,Imperial,CA,medium_airport,32.83539,-115.574026
+IPT,KIPT,Williamsport Regional Airport,Williamsport,PA,medium_airport,41.242126,-76.92245
+IRK,KIRK,Kirksville Regional Airport,Kirksville,MO,medium_airport,40.09349822998047,-92.5448989868164
+ISP,KISP,Long Island MacArthur Airport,Islip,NY,medium_airport,40.796324,-73.101703
+ITH,KITH,Ithaca Tompkins Regional Airport,Ithaca,NY,medium_airport,42.49100112915039,-76.4583969116211
+ITO,PHTO,Hilo International Airport,Hilo,HI,medium_airport,19.72135,-155.045428
+JAC,KJAC,Jackson Hole Airport,Jackson,WY,medium_airport,43.6073,-110.737999
+JAN,KJAN,Jackson-Medgar Wiley Evers International Airport,Jackson,MS,medium_airport,32.311199,-90.075897
+JAX,KJAX,Jacksonville International Airport,Jacksonville,FL,large_airport,30.492469,-81.687813
+JBR,KJBR,Jonesboro Municipal Airport,Jonesboro,AR,medium_airport,35.83169937133789,-90.64640045166016
+JFK,KJFK,John F. Kennedy International Airport,New York,NY,large_airport,40.639447,-73.779317
+JHM,PHJH,Kapalua Airport,Lahaina,HI,medium_airport,20.9629,-156.673004
+JLN,KJLN,Joplin Regional Airport,Joplin,MO,medium_airport,37.151798,-94.498299
+JMS,KJMS,Jamestown Regional Airport,Jamestown,ND,medium_airport,46.92969894,-98.67819977
+JNU,PAJN,Juneau International Airport,Juneau,AK,medium_airport,58.354935,-134.574416
+JST,KJST,John Murtha Johnstown Cambria County Airport,Johnstown,PA,medium_airport,40.31610107421875,-78.83390045166016
+KLW,PAKW,Klawock Airport,Klawock,AK,medium_airport,55.579201,-133.076004
+KOA,PHKO,Ellison Onizuka Kona International Airport at Keāhole,Kailua-Kona,HI,large_airport,19.738783,-156.045603
+KTN,PAKT,Ketchikan International Airport,Ketchikan,AK,medium_airport,55.35559845,-131.7140045
+LAF,KLAF,Purdue University Airport,West Lafayette,IN,medium_airport,40.412875,-86.939363
+LAL,KLAL,Lakeland Linder International Airport,Lakeland,FL,medium_airport,27.989267,-82.020715
+LAN,KLAN,Capital Region International Airport,Lansing,MI,medium_airport,42.777582,-84.585721
+LAR,KLAR,Laramie Regional Airport,Laramie,WY,medium_airport,41.31209945678711,-105.67500305175781
+LAS,KLAS,Harry Reid International Airport,Las Vegas,NV,large_airport,36.083361,-115.151817
+LAW,KLAW,Lawton Fort Sill Regional Airport,Lawton,OK,medium_airport,34.567699,-98.416603
+LAX,KLAX,Los Angeles International Airport,Los Angeles,CA,large_airport,33.942501,-118.407997
+LBB,KLBB,Lubbock Preston Smith International Airport,Lubbock,TX,medium_airport,33.663601,-101.822998
+LBE,KLBE,Arnold Palmer Regional Airport,Latrobe,PA,medium_airport,40.275902,-79.4048
+LBF,KLBF,North Platte Regional Airport Lee Bird Field,North Platte,NE,medium_airport,41.12620163,-100.6839981
+LBL,KLBL,Liberal Mid-America Regional Airport,Liberal,KS,medium_airport,37.0442009,-100.9599991
+LCH,KLCH,Lake Charles Regional Airport,Lake Charles,LA,medium_airport,30.126100540161133,-93.22329711914062
+LCK,KLCK,Rickenbacker International Airport,Columbus,OH,medium_airport,39.813801,-82.927803
+LEB,KLEB,Lebanon Municipal Airport,Lebanon,NH,medium_airport,43.626098632799994,-72.30419921880001
+LEX,KLEX,Blue Grass Airport,Lexington,KY,medium_airport,38.035066,-84.606738
+LFT,KLFT,Lafayette Regional Airport,Lafayette,LA,medium_airport,30.205299,-91.987602
+LGA,KLGA,LaGuardia Airport,New York,NY,large_airport,40.777199,-73.872597
+LGB,KLGB,Long Beach International Airport,Long Beach,CA,large_airport,33.816523,-118.149891
+LIH,PHLI,Lihue Airport,"Lihue, Kauai",HI,large_airport,21.974393,-159.337146
+LIT,KLIT,Bill & Hillary Clinton National Airport/Adams Field,Little Rock,AR,medium_airport,34.729222,-92.223591
+LNK,KLNK,Lincoln Airport,Lincoln,NE,medium_airport,40.844882,-96.76178
+LNS,KLNS,Lancaster Airport,Lancaster,PA,medium_airport,40.121700286865234,-76.29609680175781
+LNY,PHNY,Lanai Airport,Lanai City,HI,medium_airport,20.785675,-156.951324
+LRD,KLRD,Laredo International Airport,Laredo,TX,medium_airport,27.5438,-99.461601
+LRU,KLRU,Las Cruces International Airport,Las Cruces,NM,medium_airport,32.289398,-106.921997
+LSE,KLSE,La Crosse Regional Airport,La Crosse,WI,medium_airport,43.879002,-91.256699
+LUK,KLUK,Cincinnati Municipal Airport Lunken Field,Cincinnati,OH,medium_airport,39.102357,-84.418945
+LUR,PALU,Cape Lisburne LRRS Airport,Cape Lisburne,AK,medium_airport,68.875099,-166.110001
+LWB,KLWB,Greenbrier Valley Airport,Lewisburg,WV,medium_airport,37.857914,-80.400438
+LWS,KLWS,Lewiston Nez Perce County Airport,Lewiston,ID,medium_airport,46.3745002746582,-117.01499938964844
+LYH,KLYH,Lynchburg Regional Airport - Preston Glenn Field,Lynchburg,VA,medium_airport,37.326698,-79.200401
+MAF,KMAF,Midland International Air and Space Port,Midland,TX,medium_airport,31.942499,-102.202003
+MBS,KMBS,MBS International Airport,Freeland,MI,medium_airport,43.533181,-84.083104
+MCE,KMCE,Merced Regional Macready Field,Merced,CA,medium_airport,37.284698,-120.514
+MCG,PAMC,McGrath Airport,McGrath,AK,medium_airport,62.95289993,-155.6060028
+MCI,KMCI,Kansas City International Airport,Kansas City,MO,large_airport,39.301699,-94.713893
+MCK,KMCK,McCook Ben Nelson Regional Airport,McCook,NE,medium_airport,40.207787,-100.592794
+MCN,KMCN,Middle Georgia Regional Airport,Macon,GA,medium_airport,32.69279861450195,-83.64920043945312
+MCO,KMCO,Orlando International Airport,Orlando,FL,large_airport,28.429399490356445,-81.30899810791016
+MCW,KMCW,Mason City Municipal Airport,Mason City,IA,medium_airport,43.159801,-93.329716
+MDT,KMDT,Harrisburg International Airport,Harrisburg,PA,medium_airport,40.192838,-76.762333
+MDW,KMDW,Chicago Midway International Airport,Chicago,IL,large_airport,41.785999,-87.752403
+MEI,KMEI,Key Field / Meridian Regional Airport,Meridian,MS,medium_airport,32.3326,-88.7519
+MEM,KMEM,Frederick W. Smith International Airport,Memphis,TN,large_airport,35.043845,-89.97634
+MFE,KMFE,McAllen Miller International Airport,McAllen,TX,medium_airport,26.176141,-98.237965
+MFR,KMFR,Rogue Valley International-Medford Airport,Medford,OR,medium_airport,42.374199,-122.873001
+MGC,KMGC,Michigan City Municipal Airport,Michigan City,IN,medium_airport,41.7033,-86.821198
+MGM,KMGM,Montgomery Regional (Dannelly Field) Airport,Montgomery,AL,medium_airport,32.300598,-86.393997
+MGW,KMGW,Morgantown Municipal Airport Walter L. (Bill) Hart Field,Morgantown,WV,medium_airport,39.643305,-79.917598
+MHK,KMHK,Manhattan Regional Airport,Manhattan,KS,medium_airport,39.14099884033203,-96.6707992553711
+MHT,KMHT,Manchester-Boston Regional Airport,Manchester,NH,medium_airport,42.932598,-71.435699
+MIA,KMIA,Miami International Airport,Miami,FL,large_airport,25.796011,-80.289751
+MKE,KMKE,General Mitchell International Airport,Milwaukee,WI,large_airport,42.947201,-87.896599
+MKG,KMKG,Muskegon County Airport,Muskegon,MI,medium_airport,43.169498,-86.238197
+MKK,PHMK,Molokai Airport,Kaunakakai,HI,medium_airport,21.152901,-157.095993
+MKL,KMKL,McKellar-Sipes Regional Airport,Jackson,TN,medium_airport,35.599899,-88.915604
+MLB,KMLB,Melbourne Orlando International Airport,Melbourne,FL,medium_airport,28.102009,-80.641088
+MLI,KMLI,Quad City International Airport,Moline,IL,medium_airport,41.448502,-90.5075
+MLU,KMLU,Monroe Regional Airport,Monroe,LA,medium_airport,32.510899,-92.037697
+MMH,KMMH,Mammoth Yosemite Airport,Mammoth Lakes,CA,medium_airport,37.625381,-118.84306
+MOB,KMOB,Mobile Regional Airport,Mobile,AL,medium_airport,30.6912,-88.242798
+MOT,KMOT,Minot International Airport,Minot,ND,medium_airport,48.25801,-101.279123
+MQT,KSAW,Marquette Sawyer Regional Airport,Gwinn,MI,medium_airport,46.351498,-87.395884
+MRI,PAMR,Merrill Field,Anchorage,AK,medium_airport,61.212792,-149.843988
+MRY,KMRY,Monterey Regional Airport,Monterey,CA,medium_airport,36.586777,-121.844183
+MSL,KMSL,Northwest Alabama Regional Airport,Muscle Shoals,AL,medium_airport,34.745123,-87.612981
+MSN,KMSN,Dane County Regional Truax Field,Madison,WI,medium_airport,43.1399,-89.337502
+MSO,KMSO,Missoula Montana Airport,Missoula,MT,medium_airport,46.915816,-114.091107
+MSP,KMSP,Minneapolis–Saint Paul International Airport / Wold–Chamberlain Field,Minneapolis,MN,large_airport,44.880081,-93.221741
+MSS,KMSS,Massena International Airport Richards Field,Massena,NY,medium_airport,44.936157,-74.844304
+MSY,KMSY,Louis Armstrong New Orleans International Airport,New Orleans,LA,large_airport,29.993401,-90.264673
+MTJ,KMTJ,Montrose Regional Airport,Montrose,CO,medium_airport,38.5098,-107.893997
+MUE,PHMU,Waimea Kohala Airport,Waimea (Kamuela),HI,medium_airport,20.001301,-155.667999
+MWA,KMWA,Veterans Airport of Southern Illinois,Marion,IL,medium_airport,37.751208,-89.016568
+MWL,KMWL,Mineral Wells Regional Airport,Mineral Wells,TX,medium_airport,32.781601,-98.060204
+MYL,KMYL,McCall Municipal Airport,McCall,ID,medium_airport,44.888837,-116.101112
+MYR,KMYR,Myrtle Beach International Airport,Myrtle Beach,SC,large_airport,33.679699,-78.928299
+MYU,PAMY,Mekoryuk Airport,Mekoryuk,AK,medium_airport,60.372338,-166.269751
+NPT,KUUU,Newport State Airport,Newport,RI,medium_airport,41.532207,-71.281039
+NUI,PAQT,Nuiqsut Airport,Nuiqsut,AK,medium_airport,70.209999,-151.005998
+OAJ,KOAJ,Albert J Ellis Airport,Richlands,NC,medium_airport,34.829201,-77.612099
+OAK,KOAK,Oakland San Francisco Bay Airport,Oakland,CA,large_airport,37.720085,-122.221184
+OCE,KOXB,Ocean City Municipal Airport,Ocean City,MD,medium_airport,38.310398,-75.124001
+OGD,KOGD,Ogden Hinckley Airport,Ogden,UT,medium_airport,41.195899963379,-112.0120010376
+OGG,PHOG,Kahului International Airport,Kahului,HI,large_airport,20.896263,-156.431837
+OGS,KOGS,Ogdensburg International Airport,Ogdensburg,NY,medium_airport,44.6819,-75.4655
+OKC,KOKC,OKC Will Rogers World Airport,Oklahoma City,OK,large_airport,35.393388,-97.598248
+OLF,KOLF,L M Clayton Airport,Wolf Point,MT,medium_airport,48.094501,-105.574997
+OLM,KOLM,Olympia Regional Airport,Olympia,WA,medium_airport,46.969399,-122.903
+OMA,KOMA,Eppley Airfield,Omaha,NE,large_airport,41.3032,-95.894096
+OME,PAOM,Nome Airport,Nome,AK,medium_airport,64.51219940185547,-165.44500732421875
+ONT,KONT,Ontario International Airport,Ontario,CA,large_airport,34.056,-117.600998
+OPF,KOPF,Miami-Opa Locka Executive Airport,Miami,FL,medium_airport,25.907,-80.278397
+ORD,KORD,Chicago O'Hare International Airport,Chicago,IL,large_airport,41.9786,-87.9048
+ORF,KORF,Norfolk International Airport,Norfolk,VA,large_airport,36.895341,-76.201
+ORH,KORH,Worcester Regional Airport,Worcester,MA,medium_airport,42.2673,-71.875702
+ORT,PAOR,Northway Airport,Northway,AK,medium_airport,62.9613,-141.929001
+OTH,KOTH,Southwest Oregon Regional Airport,North Bend,OR,medium_airport,43.41709899902344,-124.24600219726562
+OTZ,PAOT,Ralph Wien Memorial Airport,Kotzebue,AK,medium_airport,66.88469696,-162.598999
+OWB,KOWB,Owensboro Daviess County Airport,Owensboro,KY,medium_airport,37.74010086,-87.16680145
+PAE,KPAE,Seattle Paine Field International Airport,Everett,WA,medium_airport,47.9063,-122.281998
+PAH,KPAH,Barkley Regional Airport,Paducah,KY,medium_airport,37.06079864501953,-88.7738037109375
+PBG,KPBG,Plattsburgh International Airport,Plattsburgh,NY,medium_airport,44.650902,-73.468102
+PDK,KPDK,DeKalb Peachtree Airport,Atlanta,GA,medium_airport,33.87633,-84.30213
+PDT,KPDT,Eastern Oregon Regional Airport at Pendleton,Pendleton,OR,medium_airport,45.695099,-118.841003
+PDX,KPDX,Portland International Airport,Portland,OR,large_airport,45.588699,-122.598
+PGA,KPGA,Page Municipal Airport,Page,AZ,medium_airport,36.924234,-111.447716
+PGD,KPGD,Punta Gorda Airport,Punta Gorda,FL,medium_airport,26.9202,-81.990501
+PGV,KPGV,Pitt-Greenville Airport,Greenville,NC,medium_airport,35.635535,-77.384262
+PHF,KPHF,Newport News Williamsburg International Airport,Newport News,VA,medium_airport,37.131901,-76.492996
+PHL,KPHL,Philadelphia International Airport,Philadelphia,PA,large_airport,39.871899,-75.241096
+PHX,KPHX,Phoenix Sky Harbor International Airport,Phoenix,AZ,large_airport,33.435302,-112.005905
+PIA,KPIA,General Wayne A. Downing Peoria International Airport,Peoria,IL,medium_airport,40.663841,-89.692631
+PIB,KPIB,Hattiesburg Laurel Regional Airport,Moselle,MS,medium_airport,31.4671,-89.337097
+PIE,KPIE,St. Petersburg Clearwater International Airport,Pinellas Park,FL,large_airport,27.9102,-82.687401
+PIH,KPIH,Pocatello Regional Airport,Pocatello,ID,medium_airport,42.9098014831543,-112.59600067138672
+PIR,KPIR,Pierre Regional Airport,Pierre,SD,medium_airport,44.38270187,-100.2860031
+PIT,KPIT,Pittsburgh International Airport,Pittsburgh,PA,large_airport,40.491501,-80.232903
+PIZ,PPIZ,Point Lay LRRS Airport,Point Lay,AK,medium_airport,69.732903,-163.005005
+PKB,KPKB,Mid Ohio Valley Regional Airport,Parkersburg (Williamstown),WV,medium_airport,39.3451,-81.439201
+PLN,KPLN,Pellston Regional Airport of Emmet County Airport,Pellston,MI,medium_airport,45.57089996,-84.79669952
+PNS,KPNS,Pensacola International Airport,Pensacola,FL,large_airport,30.472718,-87.186639
+PQI,KPQI,Presque Isle International Airport,Presque Isle,ME,medium_airport,46.688999,-68.0448
+PRC,KPRC,Prescott Regional Airport - Ernest A. Love Field,Prescott,AZ,medium_airport,34.653502,-112.419883
+PSC,KPSC,Tri Cities Airport,Pasco,WA,medium_airport,46.264702,-119.119003
+PSG,PAPG,Petersburg James A Johnson Airport,Petersburg,AK,medium_airport,56.80170059,-132.9450073
+PSM,KPSM,Portsmouth International Airport at Pease,Portsmouth,NH,medium_airport,43.0779,-70.823303
+PSP,KPSP,Palm Springs International Airport,Palm Springs,CA,large_airport,33.8297,-116.507004
+PTH,PAPH,Port Heiden Airport,Port Heiden,AK,medium_airport,56.957893,-158.630219
+PTU,PAPM,Platinum Airport,Platinum,AK,medium_airport,59.017675,-161.827927
+PUB,KPUB,Pueblo Memorial Airport,Pueblo,CO,medium_airport,38.289101,-104.497002
+PUW,KPUW,Pullman-Moscow Regional Airport,Pullman,WA,medium_airport,46.741601,-117.11163
+PVD,KPVD,Rhode Island T. F. Green International Airport,Providence/Warwick,RI,large_airport,41.725038,-71.425668
+PVU,KPVU,Provo Municipal Airport,Provo,UT,medium_airport,40.218894,-111.722445
+PWM,KPWM,Portland International Jetport,Portland,ME,large_airport,43.646198,-70.309303
+RAP,KRAP,Rapid City Regional Airport,Rapid City,SD,medium_airport,44.0452995300293,-103.05699920654297
+RBY,PARY,Ruby Airport,Ruby,AK,medium_airport,64.727203,-155.470001
+RDD,KRDD,Redding Municipal Airport,Redding,CA,medium_airport,40.50899887,-122.2929993
+RDM,KRDM,Roberts Field,Redmond,OR,medium_airport,44.254101,-121.150002
+RDU,KRDU,Raleigh-Durham International Airport,Raleigh/Durham,NC,large_airport,35.878659,-78.7873
+RFD,KRFD,Chicago Rockford International Airport,Chicago/Rockford,IL,medium_airport,42.1954,-89.097198
+RHI,KRHI,Rhinelander Oneida County Airport,Rhinelander,WI,medium_airport,45.63119888305664,-89.46749877929688
+RIC,KRIC,Richmond International Airport,Richmond,VA,large_airport,37.505199,-77.319702
+RIW,KRIW,Central Wyoming Regional Airport,Riverton,WY,medium_airport,43.064201,-108.459999
+RKD,KRKD,Knox County Regional Airport,Rockland,ME,medium_airport,44.060101,-69.099197
+RKS,KRKS,Southwest Wyoming Regional Airport,Rock Springs,WY,medium_airport,41.5942,-109.065001
+RNO,KRNO,Reno Tahoe International Airport,Reno,NV,large_airport,39.4991,-119.767998
+ROA,KROA,Roanoke–Blacksburg Regional Airport,Roanoke,VA,medium_airport,37.3255,-79.975403
+ROC,KROC,Frederick Douglass Greater Rochester International Airport,Rochester,NY,large_airport,43.1189,-77.672401
+ROW,KROW,Roswell Air Center Airport,Roswell,NM,medium_airport,33.301601,-104.530998
+RST,KRST,Rochester International Airport,Rochester,MN,medium_airport,43.908298,-92.5
+RSW,KRSW,Southwest Florida International Airport,Fort Myers,FL,large_airport,26.534685,-81.752816
+RUT,KRUT,Rutland - Southern Vermont Regional Airport,Rutland,VT,medium_airport,43.5294,-72.9496
+SAF,KSAF,Santa Fe Municipal Airport,Santa Fe,NM,medium_airport,35.6171,-106.088997
+SAN,KSAN,San Diego International Airport,San Diego,CA,large_airport,32.733601,-117.190002
+SAT,KSAT,San Antonio International Airport,San Antonio,TX,large_airport,29.533701,-98.469803
+SAV,KSAV,Savannah Hilton Head International Airport,Savannah,GA,large_airport,32.126591,-81.19998
+SBA,KSBA,Santa Barbara Municipal Airport,Santa Barbara,CA,medium_airport,34.426201,-119.839996
+SBD,KSBD,San Bernardino International Airport,San Bernardino,CA,large_airport,34.096717,-117.236596
+SBN,KSBN,South Bend International Airport,South Bend,IN,medium_airport,41.708304,-86.316922
+SBP,KSBP,San Luis County Regional Airport,San Luis Obispo,CA,medium_airport,35.236801147499996,-120.641998291
+SBY,KSBY,Salisbury Ocean City Wicomico Regional Airport,Salisbury,MD,medium_airport,38.34049987792969,-75.51029968261719
+SCC,PASC,Deadhorse Airport,Deadhorse,AK,medium_airport,70.19470215,-148.4649963
+SCE,KUNV,State College Regional Airport,State College,PA,medium_airport,40.849374,-77.84852
+SCK,KSCK,Stockton Metropolitan Airport,Stockton,CA,medium_airport,37.893279,-121.238079
+SDF,KSDF,Louisville Muhammad Ali International Airport,Louisville,KY,large_airport,38.1706,-85.735076
+SDP,PASD,Sand Point Airport,Sand Point,AK,medium_airport,55.313908,-160.522099
+SDY,KSDY,Sidney - Richland Regional Airport,Sidney,MT,medium_airport,47.705141,-104.194422
+SEA,KSEA,Seattle–Tacoma International Airport,Seattle,WA,large_airport,47.447943,-122.310276
+SFB,KSFB,Orlando Sanford International Airport,Orlando,FL,large_airport,28.774277,-81.234626
+SFO,KSFO,San Francisco International Airport,San Francisco,CA,large_airport,37.619806,-122.374821
+SGF,KSGF,Springfield Branson National Airport,Springfield,MO,medium_airport,37.245047,-93.388596
+SGU,KSGU,St George Regional Airport,St George,UT,medium_airport,37.036389,-113.510306
+SHD,KSHD,Shenandoah Valley Regional Airport,Weyers Cave,VA,medium_airport,38.263802,-78.8964
+SHR,KSHR,Sheridan County Airport,Sheridan,WY,medium_airport,44.76919937133789,-106.9800033569336
+SHV,KSHV,Shreveport Regional Airport,Shreveport,LA,medium_airport,32.444747,-93.826741
+SIT,PASI,Sitka Rocky Gutierrez Airport,Sitka,AK,medium_airport,57.04710006713867,-135.36199951171875
+SJC,KSJC,Mineta San Jose International Airport,San Jose,CA,large_airport,37.362452,-121.929188
+SJT,KSJT,San Angelo Regional Mathis Field,San Angelo,TX,medium_airport,31.35770034790039,-100.49600219726562
+SLC,KSLC,Salt Lake City International Airport,Salt Lake City,UT,large_airport,40.78886,-111.979866
+SLE,KSLE,Salem-Willamette Valley Airport/McNary Field,Salem,OR,medium_airport,44.9095,-123.002998
+SLK,KSLK,Adirondack Regional Airport,Saranac Lake,NY,medium_airport,44.38691,-74.204629
+SLN,KSLN,Salina Municipal Airport,Salina,KS,medium_airport,38.79100036621094,-97.6521987915039
+SMF,KSMF,Sacramento International Airport,Sacramento,CA,large_airport,38.6954,-121.591003
+SMN,KSMN,Lemhi County Airport,Salmon,ID,medium_airport,45.122233,-113.88196
+SMX,KSMX,Santa Maria Public Airport Captain G Allan Hancock Field,Santa Maria,CA,medium_airport,34.898899,-120.457001
+SNA,KSNA,John Wayne Orange County International Airport,Santa Ana,CA,large_airport,33.675063,-117.869281
+SNP,PASN,St Paul Island Airport,St Paul Island,AK,medium_airport,57.166311,-170.222555
+SOW,KSOW,Show Low Regional Airport,Show Low,AZ,medium_airport,34.264062,-110.007091
+SPI,KSPI,Abraham Lincoln Capital Airport,Springfield,IL,medium_airport,39.844101,-89.677902
+SPS,KSPS,Wichita Falls Municipal Airport / Sheppard Air Force Base,Wichita Falls,TX,medium_airport,33.9888,-98.491898
+SQL,KSQL,San Carlos Airport,San Carlos,CA,medium_airport,37.51313,-122.250838
+SRQ,KSRQ,Sarasota Bradenton International Airport,Sarasota/Bradenton,FL,large_airport,27.394631,-82.554359
+STC,KSTC,Saint Cloud Regional Airport,Saint Cloud,MN,medium_airport,45.5466,-94.059898
+STG,PAPB,St George Airport,St George,AK,medium_airport,56.577345,-169.663823
+STL,KSTL,St. Louis Lambert International Airport,St Louis,MO,large_airport,38.748697,-90.370003
+STS,KSTS,Charles M. Schulz Sonoma County Airport,Santa Rosa,CA,medium_airport,38.50899887,-122.8130035
+SUN,KSUN,Friedman Memorial Airport,Hailey,ID,medium_airport,43.50439835,-114.2959976
+SUX,KSUX,Sioux Gateway Airport / Brigadier General Bud Day Field,Sioux City,IA,medium_airport,42.397605,-96.382237
+SVA,PASA,Savoonga Airport,Savoonga,AK,medium_airport,63.686401,-170.492996
+SVC,KSVC,Grant County Airport,Silver City,NM,medium_airport,32.636701,-108.154736
+SWF,KSWF,New York Stewart International Airport,Newburgh,NY,medium_airport,41.50421,-74.108901
+SWO,KSWO,Stillwater Regional Airport,Stillwater,OK,medium_airport,36.162132,-97.085581
+SYR,KSYR,Syracuse Hancock International Airport,Syracuse,NY,large_airport,43.11119842529297,-76.1063003540039
+TBN,KTBN,Waynesville-St. Robert Regional Airport-Forney Field,Fort Leonard Wood,MO,medium_airport,37.7416,-92.140701
+TEB,KTEB,Teterboro Airport,Teterboro,NJ,medium_airport,40.850101,-74.060799
+TEX,KTEX,Telluride Regional Airport,Telluride,CO,medium_airport,37.9538,-107.907997
+TIW,KTIW,Tacoma Narrows Airport,Tacoma,WA,medium_airport,47.267407,-122.577295
+TKF,KTRK,Truckee Tahoe Airport,Truckee,CA,medium_airport,39.318628,-120.140562
+TLH,KTLH,Tallahassee International Airport,Tallahassee,FL,medium_airport,30.401209,-84.35433
+TOL,KTOL,Eugene F. Kranz Toledo Express Airport,Toledo,OH,medium_airport,41.5868,-83.8078
+TPA,KTPA,Tampa International Airport,Tampa,FL,large_airport,27.9755,-82.533203
+TRI,KTRI,Tri-Cities Regional TN/VA Airport,Blountville,TN,medium_airport,36.475201,-82.407401
+TSM,KSKX,Taos Regional Airport,Taos,NM,medium_airport,36.452494,-105.67749
+TTN,KTTN,Trenton Mercer Airport,Ewing Township,NJ,medium_airport,40.276699,-74.813499
+TUL,KTUL,Tulsa International Airport,Tulsa,OK,large_airport,36.197084,-95.886225
+TUP,KTUP,Tupelo Regional Airport,Tupelo,MS,medium_airport,34.26810073852539,-88.7698974609375
+TUS,KTUS,Tucson International Airport,Tucson,AZ,large_airport,32.115004,-110.938053
+TVC,KTVC,Cherry Capital Airport,Traverse City,MI,medium_airport,44.741402,-85.582199
+TVF,KTVF,Thief River Falls Regional Airport,Thief River Falls,MN,medium_airport,48.065701,-96.184998
+TWF,KTWF,Joslin Field Magic Valley Regional Airport,Twin Falls,ID,medium_airport,42.4818,-114.487999
+TXK,KTXK,Texarkana Regional Airport (Webb Field),Texarkana,AR,medium_airport,33.453701,-93.990997
+TYR,KTYR,Tyler Pounds Regional Airport,Tyler,TX,medium_airport,32.35409927368164,-95.40239715576172
+TYS,KTYS,McGhee Tyson Airport,Knoxville/Maryville,TN,large_airport,35.811001,-83.994003
+UIN,KUIN,Quincy Regional Airport Baldwin Field,Quincy,IL,medium_airport,39.942699,-91.194603
+UNK,PAUN,Unalakleet Airport,Unalakleet,AK,medium_airport,63.888401,-160.798996
+USA,KJQF,Concord-Padgett Regional Airport,Concord,NC,medium_airport,35.387798,-80.709099
+UST,KSGJ,Northeast Florida Regional Airport,St Augustine,FL,medium_airport,29.9592,-81.339798
+UTO,PAIM,Indian Mountain LRRS Airport,Utopia Creek,AK,medium_airport,65.992798,-153.703995
+VCT,KVCT,Victoria Regional Airport,Victoria,TX,medium_airport,28.85260009765625,-96.91850280761719
+VDZ,PAVD,Valdez Pioneer Field,Valdez,AK,medium_airport,61.132712,-146.246567
+VEL,KVEL,Vernal Regional Airport,Vernal,UT,medium_airport,40.436214,-109.511661
+VLD,KVLD,Valdosta Regional Airport,Valdosta,GA,medium_airport,30.782499313354492,-83.27670288085938
+VPS,KVPS,Destin-Fort Walton Beach Airport,Valparaiso,FL,medium_airport,30.481315,-86.515839
+VRB,KVRB,Vero Beach Regional Airport,Vero Beach,FL,medium_airport,27.6556,-80.417901
+WKK,5A8,Aleknagik / New Airport,Aleknagik,AK,medium_airport,59.2826004028,-158.617996216
+WRG,PAWG,Wrangell Airport,Wrangell,AK,medium_airport,56.48429871,-132.3699951
+WST,KWST,Westerly State Airport,Westerly,RI,medium_airport,41.349602,-71.803398
+WYS,KWYS,Yellowstone Airport,West Yellowstone,MT,medium_airport,44.6884,-111.117996
+XNA,KXNA,Northwest Arkansas National Airport,Fayetteville/Springdale/Rogers,AR,medium_airport,36.281898,-94.306801
+XWA,KXWA,Williston Basin International Airport,Williston,ND,medium_airport,48.260863,-103.75116
+YAK,PAYA,Yakutat Airport,Yakutat,AK,medium_airport,59.508717,-139.660435
+YKM,KYKM,Yakima Air Terminal McAllister Field,Yakima,WA,medium_airport,46.56819916,-120.5439987
+YUM,KNYL,Yuma International Airport / Marine Corps Air Station Yuma,Yuma,AZ,medium_airport,32.650938,-114.609375
