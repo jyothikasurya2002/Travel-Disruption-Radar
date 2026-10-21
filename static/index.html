@@ -7,7 +7,7 @@
   <style>
     :root {
       --bg: #f6f7f9; --panel: #ffffff; --ink: #14171c; --muted: #5d6573; --line: #e3e6eb;
-      --accent: #2456d6; --accent-ink: #ffffff; --chip: #eef1f5;
+      --accent: #2456d6; --accent-ink: #ffffff; --chip: #eef1f5; --accent-soft: #e3ebfd;
       --sev0: #2f8a57; --sev1: #6b8f1a; --sev2: #c98a00; --sev3: #d9622b; --sev4: #c62a3a;
       --sev0-bg: #e7f4ec; --sev1-bg: #eef4dd; --sev2-bg: #fdf3d8; --sev3-bg: #fde8dd; --sev4-bg: #fbe1e4;
       --shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 1px 3px rgba(16, 24, 40, .08);
@@ -15,7 +15,7 @@
     @media (prefers-color-scheme: dark) {
       :root:not([data-theme="light"]) {
         --bg: #0f1216; --panel: #171b21; --ink: #e8ebf0; --muted: #9aa3b2; --line: #2a3039;
-        --accent: #6f95ff; --accent-ink: #0f1216; --chip: #222831;
+        --accent: #6f95ff; --accent-ink: #0f1216; --chip: #222831; --accent-soft: #1d2840;
         --sev0: #4cc082; --sev1: #a3c94a; --sev2: #f0b429; --sev3: #f08a55; --sev4: #f2636f;
         --sev0-bg: #16271e; --sev1-bg: #1f2714; --sev2-bg: #2b2412; --sev3-bg: #2d1c14; --sev4-bg: #2e1519;
         --shadow: none;
@@ -23,7 +23,7 @@
     }
     :root[data-theme="dark"] {
       --bg: #0f1216; --panel: #171b21; --ink: #e8ebf0; --muted: #9aa3b2; --line: #2a3039;
-      --accent: #6f95ff; --accent-ink: #0f1216; --chip: #222831;
+      --accent: #6f95ff; --accent-ink: #0f1216; --chip: #222831; --accent-soft: #1d2840;
       --sev0: #4cc082; --sev1: #a3c94a; --sev2: #f0b429; --sev3: #f08a55; --sev4: #f2636f;
       --sev0-bg: #16271e; --sev1-bg: #1f2714; --sev2-bg: #2b2412; --sev3-bg: #2d1c14; --sev4-bg: #2e1519;
       --shadow: none;
@@ -67,6 +67,43 @@
       background: var(--chip); color: var(--ink); cursor: pointer;
     }
     .chip:hover { border-color: var(--accent); }
+
+    /* date field + calendar */
+    .when, .date-field { position: relative; }
+    .date-field input { padding-right: 46px; }
+    .cal-btn {
+      position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+      width: 36px; height: 36px; display: grid; place-items: center;
+      border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer;
+    }
+    .cal-btn:hover, .cal-btn[aria-expanded="true"] { color: var(--accent); background: var(--chip); }
+    .cal-btn:focus-visible { outline: 2px solid var(--accent); }
+    .cal {
+      position: absolute; z-index: 20; top: calc(100% + 6px); right: 0;
+      width: 300px; max-width: calc(100vw - 32px); padding: 12px;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(16, 24, 40, .18);
+    }
+    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-weight: 600; }
+    .cal-nav {
+      width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 6px;
+      background: var(--bg); color: var(--ink); font: inherit; cursor: pointer;
+    }
+    .cal-nav:disabled { opacity: .3; cursor: default; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .cal-dow { font-size: 11px; font-weight: 600; color: var(--muted); padding: 2px 0 4px; }
+    .cal-day {
+      height: 36px; border: 1px solid transparent; border-radius: 8px; padding: 0;
+      font: inherit; font-size: 14px; font-variant-numeric: tabular-nums;
+      background: transparent; color: var(--muted); opacity: .4; cursor: not-allowed;
+    }
+    .cal-day.ok { opacity: 1; color: var(--ink); background: var(--accent-soft); font-weight: 600; cursor: pointer; }
+    .cal-day.ok:hover { border-color: var(--accent); }
+    .cal-day.ok:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+    .cal-day.today { box-shadow: inset 0 0 0 1.5px var(--accent); }
+    .cal-day.sel { background: var(--accent); color: var(--accent-ink); }
+    .cal-foot { margin-top: 10px; font-size: 12px; color: var(--muted); line-height: 1.4; }
+    .cal-foot .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--accent-soft); border: 1px solid var(--accent); vertical-align: -1px; margin-right: 4px; }
 
     /* states */
     #status { margin-top: 18px; }
@@ -152,7 +189,20 @@
   <form id="trip" class="panel" autocomplete="off">
     <div><label for="origin">From</label><input id="origin" type="text" placeholder="New York, SFO, Portland, ME" required></div>
     <div><label for="destination">To</label><input id="destination" type="text" placeholder="San Francisco" required></div>
-    <div><label for="date">When</label><input id="date" type="text" value="tomorrow" placeholder="tomorrow, friday, 10/24"></div>
+    <div class="when">
+      <label for="date">When</label>
+      <div class="date-field">
+        <input id="date" type="text" value="tomorrow" placeholder="tomorrow, friday, 10/24">
+        <button type="button" id="cal-btn" class="cal-btn" aria-label="Choose a date from the calendar"
+                aria-haspopup="dialog" aria-expanded="false" aria-controls="cal">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+          </svg>
+        </button>
+      </div>
+      <div id="cal" class="cal" role="dialog" aria-label="Choose a travel date" hidden></div>
+    </div>
     <button class="primary" id="go" type="submit">Assess trip</button>
     <div class="row2">
       <div class="seg" role="radiogroup" aria-label="Travel mode">
@@ -208,6 +258,110 @@ function current() {
 }
 
 $("#trip").addEventListener("submit", (e) => { e.preventDefault(); run(); });
+
+// --- calendar -------------------------------------------------------------
+// Bookable dates run from today to today + max_days_ahead (from the server).
+// "Today" is a U.S. date, not the browser's: the user may be abroad, and the
+// U.S. spans several timezones. The range starts at the earliest U.S. date
+// (Hawaii) and ends at the latest (New York) + max days, so no valid trip date
+// is ever greyed out. The server still checks the exact date for the origin.
+const cal = $("#cal"), calBtn = $("#cal-btn");
+let maxDaysAhead = 15;
+fetch("/api/config").then((r) => r.json()).then((c) => { maxDaysAhead = c.max_days_ahead; }).catch(() => {});
+
+// Dates are handled as "YYYY-MM-DD" strings and UTC-midnight Date objects,
+// so the browser's own timezone never shifts a day.
+const dateIn = (tz) => new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+const toDate = (s) => new Date(s + "T00:00:00Z");
+const toIso = (d) => d.toISOString().slice(0, 10);
+const addDays = (s, n) => { const d = toDate(s); d.setUTCDate(d.getUTCDate() + n); return toIso(d); };
+const label = (s, opts) => toDate(s).toLocaleDateString(undefined, { timeZone: "UTC", ...opts });
+
+let view; // first day of the month on screen, "YYYY-MM-01"
+
+function bookable() {
+  const today = dateIn("America/New_York");
+  return { today, min: dateIn("Pacific/Honolulu"), max: addDays(today, maxDaysAhead) };
+}
+
+// The typed value as a date, when it's one the calendar can show.
+function typedDate(today) {
+  const v = $("#date").value.trim().toLowerCase();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v;
+  return { today: today, tomorrow: addDays(today, 1) }[v] || null;
+}
+
+function renderCalendar() {
+  const { today, min, max } = bookable();
+  const selected = typedDate(today);
+  const first = toDate(view), year = first.getUTCFullYear(), month = first.getUTCMonth();
+  const daysInMonth = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  const prevOk = view > min.slice(0, 8) + "01";
+  const nextOk = addDays(view, daysInMonth) <= max;
+
+  let cells = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => `<div class="cal-dow">${d}</div>`).join("");
+  cells += "<div></div>".repeat(first.getUTCDay());
+  for (let day = 1; day <= daysInMonth; day++) {
+    const iso = `${view.slice(0, 8)}${String(day).padStart(2, "0")}`;
+    const ok = iso >= min && iso <= max;
+    const cls = ["cal-day", ok && "ok", iso === today && "today", iso === selected && "sel"].filter(Boolean).join(" ");
+    cells += `<button type="button" class="${cls}" data-date="${iso}" ${ok ? "" : "disabled"}
+      aria-label="${label(iso, { weekday: "long", month: "long", day: "numeric" })}${ok ? "" : " (not available)"}"
+      ${iso === selected ? 'aria-pressed="true"' : ""}>${day}</button>`;
+  }
+
+  cal.innerHTML = `
+    <div class="cal-head">
+      <button type="button" class="cal-nav" data-nav="-1" aria-label="Previous month" ${prevOk ? "" : "disabled"}>‹</button>
+      <span>${label(view, { month: "long", year: "numeric" })}</span>
+      <button type="button" class="cal-nav" data-nav="1" aria-label="Next month" ${nextOk ? "" : "disabled"}>›</button>
+    </div>
+    <div class="cal-grid">${cells}</div>
+    <div class="cal-foot"><span class="swatch"></span>Bookable: ${label(min, { month: "short", day: "numeric" })}
+      – ${label(max, { month: "short", day: "numeric" })}. Forecasts don't reach further ahead.</div>`;
+}
+
+function openCalendar() {
+  const { today, min } = bookable();
+  const start = typedDate(today) || min;
+  view = start.slice(0, 8) + "01";
+  renderCalendar();
+  cal.hidden = false;
+  calBtn.setAttribute("aria-expanded", "true");
+  (cal.querySelector(".cal-day.sel") || cal.querySelector(".cal-day.ok"))?.focus();
+}
+
+function closeCalendar(refocus) {
+  cal.hidden = true;
+  calBtn.setAttribute("aria-expanded", "false");
+  if (refocus) calBtn.focus();
+}
+
+calBtn.addEventListener("click", () => (cal.hidden ? openCalendar() : closeCalendar(false)));
+cal.addEventListener("click", (e) => {
+  // Re-rendering replaces the clicked button, so by the time the click reaches
+  // the document the target is no longer inside .when. Keep it from closing us.
+  e.stopPropagation();
+  const nav = e.target.closest("[data-nav]");
+  if (nav && !nav.disabled) {
+    const d = toDate(view); d.setUTCMonth(d.getUTCMonth() + Number(nav.dataset.nav));
+    view = toIso(d);
+    renderCalendar();
+    return;
+  }
+  const day = e.target.closest(".cal-day.ok");
+  if (day) {
+    $("#date").value = day.dataset.date;
+    closeCalendar(false);
+    $("#date").focus();
+  }
+});
+document.addEventListener("click", (e) => {
+  if (!cal.hidden && !e.target.closest(".when")) closeCalendar(false);
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !cal.hidden) closeCalendar(true);
+});
 
 async function run() {
   const req = current();

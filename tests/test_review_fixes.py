@@ -86,6 +86,15 @@ def test_no_road_route_gives_a_clear_message(monkeypatch):
 
 # --- dates -----------------------------------------------------------------
 
+def test_calendar_limit_comes_from_the_same_constant_as_the_server():
+    from fastapi.testclient import TestClient
+
+    from app import main
+    from app.dates import MAX_DAYS_AHEAD
+    assert TestClient(main.app).get("/api/config").json() == {"max_days_ahead": MAX_DAYS_AHEAD}
+
+
+
 @pytest.mark.parametrize("text,expected", [
     ("next week", "2026-10-26"), ("in 2 weeks", "2026-11-02"), ("in 1 week", "2026-10-26"),
     ("in 15 days", "2026-11-03"),

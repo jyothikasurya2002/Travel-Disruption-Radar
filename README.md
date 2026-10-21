@@ -65,7 +65,7 @@ input → resolve places/airports/date → sources (in parallel) → signals
 | `app/models.py` | Shared data types |
 | `static/index.html` | The UI: one page, plain JavaScript |
 | `data/airports_us.csv` | U.S. airports with scheduled service, built by `scripts/build_airports.py` |
-| `tests/` | 80 tests |
+| `tests/` | 81 tests |
 
 Every source returns its findings in the same format (a `Signal`: source,
 place, severity, headline, raw evidence, link, time). That keeps the scoring
@@ -187,6 +187,12 @@ extra to install. The page goes top to bottom:
 5. the evidence, grouped by origin / route / destination, with the raw text
    (TAF, NOTAM, alert) and source links
 6. which sources responded and how fast
+
+The date can be typed or picked from a calendar. The calendar only lets you
+pick dates the forecasts cover (today to 15 days ahead) and greys out the
+rest. The limit comes from the server (`/api/config`), so the two can't
+drift apart. "Today" is taken from U.S. time, not the browser's, so someone
+checking from Europe or Asia doesn't get a valid U.S. date blocked.
 
 Text from outside sources is escaped before display. The trip is kept in
 the URL, so an assessment can be shared or reloaded. It works in light and

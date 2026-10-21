@@ -7,7 +7,7 @@ from fastapi.responses import FileResponse
 
 from app.assess import assess
 from app.connectors import gather_signals
-from app.dates import DateError
+from app.dates import MAX_DAYS_AHEAD, DateError
 from app.geo import LocationError
 from app.models import Assessment, Mode, Trip, TripRequest
 from app.resolve import resolve_trip
@@ -35,6 +35,12 @@ async def _trip_or_400(origin: str, destination: str, date: str, mode: Mode) -> 
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/api/config")
+def config():
+    """Limits the UI needs, so the calendar and the server can't disagree."""
+    return {"max_days_ahead": MAX_DAYS_AHEAD}
 
 
 @app.get("/api/resolve")
