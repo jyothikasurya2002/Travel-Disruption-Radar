@@ -1,7 +1,7 @@
 """Parse human travel dates ("tomorrow", "friday", "10/24") into a date.
 
-Deliberately small and dependency-free: the brief's example is "tomorrow",
-and ops staff mostly type relative days or short dates.
+Kept small with no extra dependency. People mostly type relative days or
+short dates, so that's what this handles.
 """
 import re
 from datetime import date, datetime, timedelta

@@ -197,7 +197,7 @@ def _alternate_airports(trip: Trip, signals: List[Signal]) -> List[str]:
     return out
 
 
-# --- fallback summary (step 5 adds the LLM version) ------------------------
+# --- rule-based summary (used when the LLM summary isn't available) -------
 
 def rule_summary(trip: Trip, score_: int, level: str, conf: str, drivers: List[Driver], action: Action) -> str:
     mode = "flight" if trip.mode == Mode.flight else "drive"

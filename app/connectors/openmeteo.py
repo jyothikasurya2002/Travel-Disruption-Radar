@@ -1,8 +1,8 @@
 """Open-Meteo hourly forecast: the only source covering the full 16-day range
 and every point along a drive. One batched request for all locations.
 
-Thresholds are deliberately simple and documented so ops can tune them:
-weather codes are WMO 4677 (95-99 thunderstorm, 56/57/66/67 freezing).
+Thresholds are simple on purpose so they're easy to tune later.
+Weather codes are WMO 4677 (95-99 thunderstorm, 56/57/66/67 freezing).
 """
 from datetime import date, datetime, timedelta, timezone
 from typing import List, Optional, Tuple

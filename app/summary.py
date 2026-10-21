@@ -1,15 +1,13 @@
-"""Plain-English briefing: Claude writes it, the rules engine owns the facts.
+"""Plain-English summary of an assessment, written by Claude.
 
-The LLM is deliberately boxed in:
-- It receives the *already computed* score, level, confidence and action,
-  plus the evidence signals (each with an id like S3). It cannot change any
-  of them; it only explains them for a busy ops person.
-- Structured output guarantees a JSON shape: {summary, cited_signals}.
-- A grounding check rejects the text if it cites unknown evidence, names an
-  airport that isn't on this trip, or quotes a different score.
-- Any failure (no key, timeout, refusal, bad JSON, failed check) falls back
-  to the deterministic rule-based summary and says why. The assessment
-  never depends on the LLM being up.
+The model only gets the already computed result (score, level, confidence,
+action) and the evidence signals, each with an id like S3. It can't change
+any of it, it just explains it. The reply is JSON {summary, cited_signals},
+and grounding_problems() rejects it if it cites evidence that doesn't
+exist, names an airport not on the trip, or quotes a different score.
+
+On any failure (no key, timeout, refusal, bad JSON, failed check) we use the
+rule-based summary instead and record why.
 """
 import asyncio
 import json

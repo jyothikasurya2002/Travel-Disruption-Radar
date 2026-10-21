@@ -1,4 +1,4 @@
-"""Step 2 as one function: raw user input -> fully resolved Trip."""
+"""Raw user input -> resolved Trip (places, airports, date, route)."""
 import asyncio
 
 from app.dates import parse_travel_date

@@ -39,13 +39,13 @@ def health():
 
 @app.get("/api/resolve")
 async def resolve(origin: str, destination: str, date: str = "tomorrow", mode: Mode = Mode.flight):
-    """Debug view of step 2: what did we understand from the user's input?"""
+    """Debug: how the input was resolved (places, airports, date, route)."""
     return await _trip_or_400(origin, destination, date, mode)
 
 
 @app.get("/api/signals")
 async def signals(origin: str, destination: str, date: str = "tomorrow", mode: Mode = Mode.flight):
-    """Debug view of step 3: raw evidence from every source, before scoring."""
+    """Debug: raw signals from every source, before scoring."""
     trip = await _trip_or_400(origin, destination, date, mode)
     sigs, statuses = await gather_signals(trip)
     sigs.sort(key=lambda s: -int(s.severity))

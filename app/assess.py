@@ -1,4 +1,4 @@
-"""The whole pipeline: input -> Trip -> Signals -> score/confidence/action -> summary."""
+"""Trip -> signals -> score/confidence/action -> summary."""
 from datetime import datetime, timezone
 
 from app import risk
