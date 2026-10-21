@@ -9,6 +9,7 @@ Design rules:
   checked is not the same as "low risk" because a source was down.
 - The LLM never touches any of this; it only narrates the result.
 """
+import re
 from collections import defaultdict
 from typing import Dict, List, Tuple
 
@@ -47,7 +48,7 @@ def score(signals: List[Signal]) -> Tuple[int, List[Driver]]:
     # the origin are not confirmed by a storm at the destination.
     best_by_source: Dict[str, Signal] = {}
     for s in scored:
-        if (s.source != top.source and s.area == top.area
+        if (s.source != top.source and same_place(s, top)
                 and s.severity >= Severity.moderate and s.source not in best_by_source):
             best_by_source[s.source] = s
     for s in list(best_by_source.values())[:MAX_CORROBORATING_SOURCES]:
@@ -61,6 +62,17 @@ def score(signals: List[Signal]) -> Tuple[int, List[Driver]]:
                               source="multiple", location=", ".join(sorted({s.location for s in rest}))[:120]))
 
     return min(100, sum(d.points for d in drivers)), drivers
+
+
+def same_place(a: Signal, b: Signal) -> bool:
+    """Origin/destination: same end of the trip. Route: a long drive is one
+    "area" but hundreds of km wide, so findings must share a sample point
+    ("km 150 …"); a warning at km 600 isn't confirmed by fog at km 0."""
+    if a.area != b.area:
+        return False
+    if a.area != "route":
+        return True
+    return bool(set(re.findall(r"km \d+", a.location)) & set(re.findall(r"km \d+", b.location)))
 
 
 def level_for(score_: int) -> Tuple[str, Severity]:

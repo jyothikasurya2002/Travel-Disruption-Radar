@@ -1,8 +1,10 @@
 """When is the traveller exposed? Every connector asks this the same way.
 
 Assumptions (we don't ask for a flight number or departure time):
-- Flights: exposure is the travel day's operating hours, 05:00-24:00 local
-  at each airport. Overnight-only events don't affect scheduled flights.
+- Flights: exposure is the travel day's operating hours, 06:00-24:00 local
+  at each airport (first departure banks at major U.S. hubs start ~6 AM).
+  Overnight-only events, like LGA's routine 00:05-06:00 closure, don't
+  affect scheduled flights.
 - Driving: departure 08:00 local at the origin, constant average speed, so
   each sample point gets an estimated time of arrival (ETA).
 """
@@ -12,7 +14,7 @@ from zoneinfo import ZoneInfo
 
 from app.models import Airport, Place, RoutePoint, Trip
 
-OPERATING_START_HOUR = 5
+OPERATING_START_HOUR = 6
 DRIVE_DEPARTURE_HOUR = 8
 # NWS zone alerts are coarse; treat a point as exposed for a few hours
 # around its ETA so we don't miss an alert that starts just after we pass.
@@ -21,11 +23,16 @@ DRIVE_EXPOSURE_PAD = timedelta(hours=2)
 Window = Tuple[datetime, datetime]  # UTC-aware [start, end)
 
 
-def operating_window(d: date, tz: str) -> Window:
+def operating_window(d: date, tz: str, now: Optional[datetime] = None) -> Window:
+    """Travel-day operating hours, minus whatever has already passed: for a
+    trip today, a closure that ended at 6 AM is irrelevant at 10 AM."""
     z = ZoneInfo(tz)
-    start = datetime.combine(d, time(OPERATING_START_HOUR), z)
-    end = datetime.combine(d + timedelta(days=1), time(0), z)
-    return start.astimezone(timezone.utc), end.astimezone(timezone.utc)
+    start = datetime.combine(d, time(OPERATING_START_HOUR), z).astimezone(timezone.utc)
+    end = datetime.combine(d + timedelta(days=1), time(0), z).astimezone(timezone.utc)
+    now = now or datetime.now(timezone.utc)
+    if start < now < end:
+        start = now
+    return start, end
 
 
 def drive_departure(trip: Trip) -> datetime:

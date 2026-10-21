@@ -51,7 +51,7 @@ def parse(data: list, pairs: List[Tuple[Airport, Place]], trip: Trip) -> List[Si
             period: Window = (_ts(f["timeFrom"]), _ts(f["timeTo"]))
             if overlap_hours(period, window) == 0:
                 continue
-            starts = max(period[0], window[0])  # don't report "from 2 AM" for a 5 AM day
+            starts = max(period[0], window[0])  # don't report "from 2 AM" for a 6 AM day
             for sev, text in assess_period(f):
                 hazards.append((sev, text, starts))
 

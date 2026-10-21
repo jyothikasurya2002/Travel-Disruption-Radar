@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import httpx
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -23,6 +24,12 @@ async def _trip_or_400(origin: str, destination: str, date: str, mode: Mode) -> 
         return await resolve_trip(origin, destination, date, mode)
     except (DateError, LocationError, ValueError) as e:
         raise HTTPException(status_code=400, detail=str(e))
+    except httpx.HTTPError:
+        # Geocoding / routing are needed before any assessment can start.
+        raise HTTPException(
+            status_code=503,
+            detail="The location or routing service didn't respond. Please try again in a moment.",
+        )
 
 
 @app.get("/api/health")

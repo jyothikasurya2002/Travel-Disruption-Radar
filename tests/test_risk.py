@@ -57,6 +57,15 @@ def test_findings_at_different_ends_of_the_trip_dont_corroborate():
     assert not any("Corroborated" in d.reason for d in drivers)
 
 
+def test_route_findings_corroborate_only_at_the_same_point():
+    flood = sig("NWS Alerts", "km 450 near Gallup, NM, km 600 near Albuquerque, NM", Severity.moderate, area="route")
+    far_fog = sig("Open-Meteo Forecast", "km 0 near Phoenix, AZ", Severity.moderate, area="route")
+    near_rain = sig("Open-Meteo Forecast", "km 600 near Albuquerque, NM", Severity.moderate, area="route")
+    assert run([flood, far_fog])[0] == 25 + 3        # 600 km apart: no corroboration
+    assert run([flood, near_rain])[0] == 25 + 10     # same point: corroborated
+    assert not risk.same_place(sig("X", "km 15", 1, area="route"), sig("Y", "km 150", 1, area="route"))
+
+
 def test_same_source_repeating_itself_is_not_corroboration():
     signals = [sig("Open-Meteo Forecast", f"km {i}", Severity.moderate) for i in range(5)]
     score, *_ = run(signals)

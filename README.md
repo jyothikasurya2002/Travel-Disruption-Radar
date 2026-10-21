@@ -4,6 +4,24 @@ Enter a U.S. trip (e.g. **New York → San Francisco, tomorrow**, by air or road
 and get an assessment of potential disruptions, the evidence behind it, and a
 recommended action.
 
+![Travel Disruption Radar: New York to Phoenix](docs/screenshot.png)
+
+## At a glance
+
+- **Four live, free data sources** (FAA airport status, aviation forecasts,
+  National Weather Service alerts, Open-Meteo) checked in parallel in about
+  1-2 seconds. Geocoding, airport and routing data turn free text into places.
+- **A deterministic, auditable risk engine.** Every point in the 0-100 score
+  traces to a named piece of evidence, with a separate confidence rating, and
+  a tiered, specific action (none / monitor / mitigate / rebook).
+- **AI where it helps, boxed in where it could hurt.** Claude writes the
+  plain-English briefing from the computed result only. A grounding check
+  rejects anything not backed by the evidence, and it falls back to a
+  rule-based summary without a key.
+- **Honest about what it doesn't know.** It reports failed sources,
+  forecasts that don't reach the travel date yet, and live delays that can't
+  be predicted ahead, instead of turning them into a false "all clear".
+
 ## Run it
 
 Requires Python 3.10+ built against a modern OpenSSL (macOS's bundled
@@ -37,6 +55,19 @@ TripRequest → resolve locations → connectors (parallel) → Signals
             → summary (LLM, grounded in Signals; rule-based fallback)
 ```
 
+| Path | Role |
+|---|---|
+| `app/main.py` | FastAPI app: `POST /api/assess`, debug `GET /api/resolve`, `GET /api/signals` |
+| `app/resolve.py`, `geo.py`, `dates.py`, `route.py` | Free text → places, airports, date, drive route |
+| `app/connectors/` | One module per source (`faa`, `taf`, `nws`, `openmeteo`), all returning `Signal`s |
+| `app/timewin.py` | When the traveller is exposed (operating hours, drive ETAs) |
+| `app/risk.py` | Score, confidence, recommended action |
+| `app/summary.py` | Claude briefing + grounding check + fallback |
+| `app/models.py` | Shared data contracts |
+| `static/index.html` | The whole UI (vanilla JS) |
+| `data/airports_us.csv` | Filtered OurAirports data (`scripts/build_airports.py`) |
+| `tests/` | 53 tests: parsers, rules, risk engine, AI-summary failure modes, upstream outages |
+
 ## Decision log
 
 **Common `Signal` contract.** Every source returns the same shape (source,
@@ -67,12 +98,18 @@ look the same to an ops user.
 **Connectors (step 3)**
 - *Concurrent and isolated.* All sources run in parallel (~1-2 s total) with
   a 20 s budget each. A failing source becomes a `SourceStatus(ok=False)`,
-  never a crash and never a silent "all clear".
+  never a crash and never a silent "all clear". Every outbound call retries
+  once on a dropped connection or 5xx (seen live: Open-Meteo blips). If the
+  geocoder or router is down before an assessment can start, the user gets
+  a clear "try again" (HTTP 503), not an error page.
 - *"Checked and clear" is evidence too.* Connectors emit severity-0 signals
   ("JFK: no ground stops…") so the user sees what was actually verified.
 - *Exposure windows.* A hazard only counts if it overlaps when the traveller
-  is there: 05:00-24:00 local at each airport, or ±2 h around the ETA at each
-  road sample (departure assumed 08:00 local).
+  is there: 06:00-24:00 local at each airport (first departure banks start
+  ~6 AM; for a trip today, from *now*, since events that already ended don't
+  matter), or ±2 h around the ETA at each road sample (departure assumed
+  08:00 local). An early 5 AM start flagged LaGuardia's routine nightly
+  closure (00:05-06:00) as High risk; it's now correctly ignored.
 - *FAA:* NOTAM closures have exact UTC windows, so they're predictive.
   GA-only restrictions (e.g. LAX "CLSD TO NON SKED TRANSIENT GA", active for
   months) and overnight closures (LGA nightly) are filtered out. Live ground
@@ -100,7 +137,9 @@ look the same to an ops user.
   Minimal, <25 Low, <50 Moderate, <75 High, else Severe.
 - *Why "same part of the trip":* an early version counted gusty winds at
   Norfolk as "corroborated" by an alert in Atlanta. Independent agreement
-  only means something about the same place. Covered by a regression test.
+  only means something about the same place. On drives the rule is stricter:
+  findings must share a point on the road, because a Flood Watch at km 600
+  isn't confirmed by fog at km 0. Both covered by regression tests.
 - *Confidence is separate from risk* (high/medium/low). It drops for failed
   sources, trips more than 3 or 7 days out, airports whose TAF doesn't reach
   the travel date yet, and route points beyond the forecast range. A quiet
@@ -145,8 +184,11 @@ Debug endpoints: `/api/resolve` (what we understood) and `/api/signals`
 
 ## Assumptions
 
-- "Today" is the server's local date; a real deployment should use the
-  origin's timezone.
+- Relative dates ("today", "tomorrow") are resolved in the origin's timezone,
+  not the server's.
+- A city's airports are its hubs within 100 km, so Toledo resolves to Detroit
+  (DTW). That fits most business travel, but a traveller flying from Toledo
+  Express should type `TOL`.
 - Long drives (e.g. NY → SF, ~51 h) are timed as if driven non-stop.
 - No flight number or departure time is asked for, so a flight is exposed
   to the whole operating day at both ends; drives depart at 08:00 local.
@@ -192,7 +234,9 @@ caught, where the first AI-written version was wrong:
 - Pinned `anthropic==0.42.0` from memory; the current SDK is 1.x.
   Corrected against the official API reference before writing LLM code.
 - "Most populous match" turned *Aspen* into Aspen Hill, MD.
-- Corroboration counted an Atlanta alert as confirming Norfolk winds.
+- Corroboration counted an Atlanta alert as confirming Norfolk winds, and
+  the same flaw existed along drive routes (found later, on live Arizona
+  flood-watch data).
 - Assumed FAA section names; switched to the tags guaranteed by the FAA's
   published DTD after reading it.
 - macOS system Python's old LibreSSL couldn't reach OSRM (environment, not
@@ -203,4 +247,51 @@ checking it against reality: real payloads, published schemas, live runs.
 
 ## Before deploying to real users
 
-_Filled in as we build._
+In priority order. The first two decide whether the tool can be trusted at
+all; the rest make it dependable and useful at scale.
+
+**1. Calibrate the score against what actually happened.** Thresholds and
+points are expert judgement today (FAA flight categories, NWS severities,
+sensible weather cut-offs). Before anyone rebooks a trip on this score, I'd
+backtest it on a few months of history: replay archived TAFs, NWS alerts and
+FAA programs against BTS on-time/cancellation data. Then tune the points so
+"High" means a measurable chance of a 60+ min delay or cancellation, and
+publish that meaning in the UI.
+
+**2. Make the trip specific.** Ask for (or import from the booking tool) the
+flight number, departure time and connections. That narrows exposure from
+"the whole day at both ends" to the actual hours, adds connection airports,
+and opens up the strongest signal of all: the inbound aircraft's status.
+Flight-status APIs are paid, so that's a cost decision for the team. For
+drives, add state 511 road-closure feeds and support multi-day trips with
+overnight stops.
+
+**3. Reliability and source etiquette.**
+- Cache shared feeds: FAA status about once a minute for all users, forecasts
+  for 15-30 min per location. That's faster, and it's polite to free public APIs.
+- Replace the public OSRM demo server (not meant for production) with a
+  self-hosted instance or a commercial router. Use a real contact address in
+  the NWS User-Agent.
+- Nightly contract tests against live payloads, so a schema change at a
+  source alerts us instead of silently zeroing a signal. Alert on per-source
+  error rate and latency.
+
+**4. Fit the ops workflow.** Ops teams don't type trips in one by one.
+Connect to the travel booking system (e.g. Navan, Concur), assess every
+upcoming trip on a schedule, and push an alert (Slack/email) when a trip
+crosses a threshold or changes level. Record who acknowledged it and what
+they did, which also produces the labelled data for step 1.
+
+**5. Security and privacy.** SSO in front of the app; traveller names and
+itineraries treated as personal data (minimal retention, no PII in logs or
+LLM prompts, which today already contain only places and weather). The API
+key goes in a secrets manager, with rate limiting on the endpoint.
+
+**6. Operate the AI part like a product.** An eval set of real assessments
+with reviewed summaries; track the grounding-check rejection rate, fallback
+rate, latency and cost per assessment; version the prompt. The LLM stays out
+of the decision path.
+
+**7. UX details found while building.** When a place name is ambiguous, show
+a picker instead of silently choosing (e.g. which Springfield). Let ops tune
+thresholds per company risk appetite. Add a "watch this trip" re-check.
