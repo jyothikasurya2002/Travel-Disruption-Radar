@@ -322,8 +322,11 @@ function renderCalendar() {
 }
 
 function openCalendar() {
-  const { today, min } = bookable();
-  const start = typedDate(today) || min;
+  const { today, min, max } = bookable();
+  const typed = typedDate(today);
+  // Open on the typed date's month only if it's bookable; never on a month
+  // with nothing to pick (e.g. "2027-05-01").
+  const start = typed && typed >= min && typed <= max ? typed : min;
   view = start.slice(0, 8) + "01";
   renderCalendar();
   cal.hidden = false;
@@ -347,6 +350,10 @@ cal.addEventListener("click", (e) => {
     const d = toDate(view); d.setUTCMonth(d.getUTCMonth() + Number(nav.dataset.nav));
     view = toIso(d);
     renderCalendar();
+    // The redraw replaced the arrow; put keyboard focus back on the new one,
+    // or on the other arrow if this one is now disabled.
+    const same = cal.querySelector(`[data-nav="${nav.dataset.nav}"]`);
+    (same.disabled ? cal.querySelector(".cal-nav:not(:disabled)") : same)?.focus();
     return;
   }
   const day = e.target.closest(".cal-day.ok");

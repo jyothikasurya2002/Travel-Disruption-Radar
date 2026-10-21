@@ -49,6 +49,18 @@ def test_saint_spelling_searches_both_forms(monkeypatch):
     assert asyncio.run(geo.geocode("Saint Louis")).name == "St. Louis, MO"
 
 
+def test_town_ending_in_a_state_name_falls_back_to_the_full_name(monkeypatch):
+    # Regression: "Port Washington" was split into "Port" + Washington state.
+    async def fake_search(name):
+        if name == "Port Washington":
+            return [{"name": "Port Washington", "admin1": "New York", "population": 15000,
+                     "latitude": 40.83, "longitude": -73.7, "timezone": "America/New_York"}]
+        return [{"name": "Port", "admin1": "Oklahoma", "population": 100,
+                 "latitude": 35.0, "longitude": -98.0, "timezone": "America/Chicago"}]
+    monkeypatch.setattr(geo, "_search", fake_search)
+    assert asyncio.run(geo.geocode("Port Washington")).name == "Port Washington, NY"
+
+
 def test_number_only_input_is_rejected_without_a_lookup():
     with pytest.raises(geo.LocationError, match="isn't a place name"):
         asyncio.run(geo.geocode("123"))
@@ -92,7 +104,6 @@ def test_calendar_limit_comes_from_the_same_constant_as_the_server():
     from app import main
     from app.dates import MAX_DAYS_AHEAD
     assert TestClient(main.app).get("/api/config").json() == {"max_days_ahead": MAX_DAYS_AHEAD}
-
 
 
 @pytest.mark.parametrize("text,expected", [
@@ -149,6 +160,21 @@ def test_taf_ending_mid_day_is_flagged_as_partial():
     [sig] = taf.parse(data, [(jfk, trip.origin)], trip)
     assert sig.coverage_note and "only runs until" in sig.coverage_note
     assert "on travel day" not in sig.headline
+
+
+# --- Open-Meteo ------------------------------------------------------------
+
+def test_late_night_window_still_gets_the_current_hour():
+    # Regression: at 11:20 PM the window 11:20-midnight contained no whole hour,
+    # so the forecast was wrongly reported as out of range.
+    from app.connectors import openmeteo
+    start = datetime(2026, 10, 22, 3, 20, tzinfo=timezone.utc)
+    window = (start, datetime(2026, 10, 22, 4, tzinfo=timezone.utc))
+    hours = ["2026-10-22T02:00", "2026-10-22T03:00", "2026-10-22T04:00"]
+    data = [{"hourly": {"time": hours, "precipitation": [0] * 3, "snowfall": [0] * 3,
+                        "wind_gusts_10m": [10] * 3, "visibility": [20000] * 3, "weather_code": [1] * 3}}]
+    [sig] = openmeteo.parse(data, [("JFK", 0, 0, window, "America/New_York", "origin")], Mode.flight)
+    assert sig.valid_for_travel_date and "1 forecast hours checked" in sig.detail
 
 
 # --- NWS -------------------------------------------------------------------

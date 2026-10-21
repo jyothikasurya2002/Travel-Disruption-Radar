@@ -65,7 +65,7 @@ input → resolve places/airports/date → sources (in parallel) → signals
 | `app/models.py` | Shared data types |
 | `static/index.html` | The UI: one page, plain JavaScript |
 | `data/airports_us.csv` | U.S. airports with scheduled service, built by `scripts/build_airports.py` |
-| `tests/` | 81 tests |
+| `tests/` | 83 tests |
 
 Every source returns its findings in the same format (a `Signal`: source,
 place, severity, headline, raw evidence, link, time). That keeps the scoring

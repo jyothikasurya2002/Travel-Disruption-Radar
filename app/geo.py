@@ -132,6 +132,19 @@ async def _search(name: str) -> list:
     return data.get("results") or []
 
 
+async def _candidates(city: str, state_full: str) -> list:
+    results = await _search(city)
+    # The geocoder treats "Saint Louis" and "St. Louis" as different names, so
+    # search both spellings and let the exact-match rule pick.
+    first, _, rest = city.partition(" ")
+    if rest and first.lower().rstrip(".") in ("saint", "st"):
+        other = ("St. " if first.lower() == "saint" else "Saint ") + rest
+        results += await _search(other)
+    if state_full:
+        results = [r for r in results if r.get("admin1", "").lower() == state_full.lower()]
+    return results
+
+
 async def timezone_at(lat: float, lon: float) -> str:
     data = await get_json(FORECAST_URL, {"latitude": lat, "longitude": lon,
                                          "timezone": "auto", "forecast_days": 1})
@@ -157,18 +170,17 @@ async def geocode(text: str) -> Place:
                 airports=[ap.model_copy(update={"distance_km": 0.0})],
             )
 
-    city, state_full = split_state(ALIASES.get(raw.lower(), raw))
+    expanded = ALIASES.get(raw.lower(), raw)
+    city, state_full = split_state(expanded)
     city = _expand_abbreviations(city)
+    results = await _candidates(city, state_full)
 
-    results = await _search(city)
-    # The geocoder treats "Saint Louis" and "St. Louis" as different names, so
-    # search both spellings and let the exact-match rule below pick.
-    first, _, rest = city.partition(" ")
-    if rest and first.lower().rstrip(".") in ("saint", "st"):
-        other = ("St. " if first.lower() == "saint" else "Saint ") + rest
-        results += await _search(other)
-    if state_full:
-        results = [r for r in results if r.get("admin1", "").lower() == state_full.lower()]
+    # Without a comma, a trailing state name might really be part of the town:
+    # "Port Washington", "West New York". If reading it as a state finds
+    # nothing, try the whole text as the name.
+    if not results and state_full and "," not in expanded:
+        city, state_full = _expand_abbreviations(expanded), ""
+        results = await _candidates(city, state_full)
     if not results:
         raise LocationError(f"Couldn't find a U.S. place called '{text}'.")
 

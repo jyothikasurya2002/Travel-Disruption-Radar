@@ -68,7 +68,9 @@ def parse(data: List[dict], locs: List[Loc], mode: Mode) -> List[Signal]:
         peak_gust, total_precip, n = 0.0, 0.0, 0
         for i, ts in enumerate(h["time"]):
             t = datetime.fromisoformat(ts).replace(tzinfo=timezone.utc)
-            if not (window[0] <= t < window[1]):
+            # Each value covers the hour starting at t. Count it if that hour
+            # overlaps the window, so 11:20 PM-midnight still gets the 11 PM hour.
+            if not (window[0] < t + timedelta(hours=1) and t < window[1]):
                 continue
             n += 1
             row = {k: h[k][i] for k in h if k != "time"}
