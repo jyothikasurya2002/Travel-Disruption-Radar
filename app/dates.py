@@ -7,8 +7,9 @@ import re
 from datetime import date, datetime, timedelta
 from typing import Optional
 
-# Open-Meteo forecasts go 16 days out; beyond that any "risk" is a guess.
-MAX_DAYS_AHEAD = 16
+# Open-Meteo's 16-day forecast includes today, so the last day with data is
+# today + 15. Beyond that any "risk" would be a guess.
+MAX_DAYS_AHEAD = 15
 
 WEEKDAYS = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
@@ -45,9 +46,15 @@ def _parse(s: str, today: date) -> Optional[date]:
     if s in ("day after tomorrow", "overmorrow"):
         return today + timedelta(days=2)
 
-    m = re.fullmatch(r"in (\d{1,2}) days?", s)
+    if s == "yesterday":
+        return today - timedelta(days=1)
+    if s == "next week":
+        return today + timedelta(days=7)
+
+    m = re.fullmatch(r"in (\d{1,2}) (day|week)s?", s)
     if m:
-        return today + timedelta(days=int(m.group(1)))
+        n = int(m.group(1))
+        return today + timedelta(days=n * 7 if m.group(2) == "week" else n)
 
     # Assumption: "friday" / "this friday" = the coming Friday (today if it is
     # Friday); "next friday" = the one after that. People disagree on this, so

@@ -1,10 +1,11 @@
-"""Open-Meteo hourly forecast: the only source covering the full 16-day range
-and every point along a drive. One batched request for all locations.
+"""Open-Meteo hourly forecast: the only source covering the full forecast
+range (today + 15 days) and every point along a drive. One batched request
+for all locations.
 
 Thresholds are simple on purpose so they're easy to tune later.
 Weather codes are WMO 4677 (95-99 thunderstorm, 56/57/66/67 freezing).
 """
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 from typing import List, Optional, Tuple
 
 from app.dates import MAX_DAYS_AHEAD
@@ -24,13 +25,15 @@ Loc = Tuple[str, float, float, Window, str, str]  # label, lat, lon, exposure wi
 async def fetch(trip: Trip) -> List[Signal]:
     locs = _locations(trip)
     start = trip.travel_date
+    # Open-Meteo's range is counted in UTC days (we request timezone=UTC);
+    # asking past today+15 is a 400 that would fail the whole source.
     end = min(
-        max(l[3][1] for l in locs).date() + timedelta(days=1),
-        date.today() + timedelta(days=MAX_DAYS_AHEAD - 1),
+        max(loc[3][1] for loc in locs).date() + timedelta(days=1),
+        datetime.now(timezone.utc).date() + timedelta(days=MAX_DAYS_AHEAD),
     )
     data = await get_json(FORECAST_URL, {
-        "latitude": ",".join(f"{l[1]:.4f}" for l in locs),
-        "longitude": ",".join(f"{l[2]:.4f}" for l in locs),
+        "latitude": ",".join(f"{loc[1]:.4f}" for loc in locs),
+        "longitude": ",".join(f"{loc[2]:.4f}" for loc in locs),
         "hourly": HOURLY, "timezone": "UTC", "wind_speed_unit": "kmh",
         "start_date": (start - timedelta(days=1)).isoformat(), "end_date": end.isoformat(),
     })
@@ -75,6 +78,9 @@ def parse(data: List[dict], locs: List[Loc], mode: Mode) -> List[Signal]:
                 hazards.append((sev, text, t))
 
         link = "https://open-meteo.com/en/docs"
+        expected = int((window[1] - window[0]).total_seconds() // 3600)
+        coverage = (f"Forecast covers only {n} of {expected} hours of the travel window"
+                    if 0 < n < expected - 1 else None)
         if n == 0:
             signals.append(Signal(
                 source=SOURCE, area=area, location=label, category="weather", severity=Severity.none,
@@ -96,7 +102,7 @@ def parse(data: List[dict], locs: List[Loc], mode: Mode) -> List[Signal]:
             source=SOURCE, area=area, location=label, category="weather", severity=sev, headline=headline,
             detail=(f"{n} forecast hours checked; peak gust {peak_gust:.0f} km/h, "
                     f"total precipitation {total_precip:.1f} mm"),
-            url=link, observed_at=now,
+            url=link, observed_at=now, coverage_note=coverage,
         ))
     return signals
 

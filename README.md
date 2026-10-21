@@ -37,7 +37,7 @@ It then asks four sources, in parallel:
 | FAA NAS Status (`nasstatus.faa.gov`) | Ground stops, ground delay programs, delays, closures | Flight |
 | AviationWeather.gov TAF | Airport forecasts: low cloud, visibility, wind, storms | Flight |
 | NWS `api.weather.gov` alerts | Official warnings and advisories | Both |
-| Open-Meteo forecast | Hourly forecast up to 16 days out | Both |
+| Open-Meteo forecast | Hourly forecast up to 15 days ahead | Both |
 
 Plus three for working out where things are: Open-Meteo geocoding (city name
 to coordinates), the OurAirports dataset (city to airports) and OSRM
@@ -65,7 +65,7 @@ input → resolve places/airports/date → sources (in parallel) → signals
 | `app/models.py` | Shared data types |
 | `static/index.html` | The UI: one page, plain JavaScript |
 | `data/airports_us.csv` | U.S. airports with scheduled service, built by `scripts/build_airports.py` |
-| `tests/` | 53 tests |
+| `tests/` | 80 tests |
 
 Every source returns its findings in the same format (a `Signal`: source,
 place, severity, headline, raw evidence, link, time). That keeps the scoring
@@ -80,16 +80,27 @@ adding one file.
   airports with scheduled passenger service) instead of calling an API for
   this. A city maps to the major airports within 100 km. If a city has none,
   it falls back to smaller ones. Without that rule, Chicago listed Gary,
-  Indiana. Typing an airport code (`SFO`) checks just that airport.
+  Indiana. Typing an airport code (`SFO` or `KSFO`) checks just that
+  airport. That's built straight from the airport data, because some
+  airports' city names ("Dallas-Fort Worth", "Raleigh/Durham") don't geocode.
+- **What you can type.** A city ("Chicago"), a city and state with or
+  without a comma ("Chicago, IL", "chicago il", "Portland Oregon"), an
+  airport code, or a common nickname (NYC, SF, LA, DC, Bay Area, Vegas,
+  Philly, NOLA). "Ft", "Mt" and "Saint"/"St." are handled, so "Ft
+  Lauderdale" and "Saint Louis" work. Input with no letters is rejected,
+  and so is a trip where origin and destination are the same place.
 - **Ambiguous names.** An exact name match wins, then the largest
   population. "Portland" gives Portland, OR, and "Portland, ME" overrides
-  that. The page always shows what it understood, so a wrong guess is easy
-  to spot. Before I added the exact-match rule, "Aspen" became Aspen Hill, MD.
-- **Dates.** A small parser for what people actually type: "tomorrow",
-  "friday", "next friday", "10/24", or an ISO date. "Today" and "tomorrow"
-  are worked out in the origin's timezone, not the server's. Anything more
-  than 16 days away is rejected, because the forecasts stop there and a
-  score would look more certain than it is.
+  that; "Washington" means DC. The page always shows what it understood, so
+  a wrong guess is easy to spot. Before I added the exact-match rule,
+  "Aspen" became Aspen Hill, MD.
+- **Dates.** A small parser for what people actually type: "today",
+  "tomorrow", "friday", "next friday", "next week", "in 3 days", "in 2
+  weeks", "10/24", "Oct 24", or an ISO date. Relative dates are worked out
+  in the origin's timezone, not the server's. Anything more than 15 days
+  away is rejected: Open-Meteo's 16-day forecast includes today, so that's
+  where the data stops, and a score beyond it would look more certain than
+  it is.
 
 ### Sources
 
@@ -98,15 +109,23 @@ adding one file.
   failed should never look like "no risk found". Each call is retried once
   if the connection drops or the server returns a 5xx. I saw Open-Meteo do
   this during testing.
+- If a source answers but only covers part of the trip, the evidence gets a
+  "Partial" note and confidence goes down. For example, an airport forecast
+  that ends at 7 PM, or NWS on the Canadian stretch of Anchorage → Seattle
+  (NWS only covers the U.S.). That used to fail the whole NWS source for the
+  trip; now the other points still count.
 - When a source checks something and finds nothing, that's recorded too
   ("JFK: no ground stops…"). The user sees what was checked, not just what
   was found.
 - **When does a hazard count?** Only if it overlaps the time the traveller
   is there. For flights that's 6 AM to midnight local time on the travel day,
-  starting from now if the trip is today. For drives it's ±2 h around the
-  estimated arrival at each point, assuming an 8 AM departure. I originally
-  started the day at 5 AM, which flagged LaGuardia's routine overnight
-  closure (until 6 AM) as High risk.
+  starting from now if the trip is today. If the destination is already on
+  the next day (LA at 10:30 PM is 1:30 AM in New York), its current day is
+  used. For drives it's the estimated arrival at each point, assuming an
+  8 AM departure (or now, for a same-day drive planned later): ±2 h for
+  alerts, which cover large zones, and ±1 h for the hourly forecast. I
+  originally started the day at 5 AM, which flagged LaGuardia's routine
+  overnight closure (until 6 AM) as High risk.
 - **FAA.** Many entries in the closures feed don't matter to airline
   passengers, e.g. LAX is listed as "closed" to private aircraft for months
   at a time. I filter out private-aircraft-only and overnight closures, and
@@ -118,16 +137,17 @@ adding one file.
   cloud and visibility (LIFR / IFR / MVFR), plus thunderstorms, freezing
   rain, snow and strong gusts. These are the conditions that cause delay
   programs. "PROB30/40" parts of a forecast are only possibilities, so they
-  count one level lower. TAFs only cover the next 24-30 hours, and the tool
-  says so when the trip is beyond that.
+  count one level lower. Freezing fog (FZFG) is treated as fog, not as
+  freezing rain. TAFs only cover the next 24-30 hours, and the tool says so
+  when the trip is beyond that or only partly covered.
 - **NWS alerts.** Looked up for each airport or road point, so only alerts
   on the trip count. Around 70% of active U.S. alerts are marine (small
   craft, gales, surf), which I drop along with frost/freeze alerts. Some
   alerts matter more for travel than their NWS severity suggests, so they get
   a minimum level, e.g. Dense Fog Advisory → moderate. Watches ("possible")
   are capped at moderate.
-- **Open-Meteo.** The only source that covers both the full 16 days and
-  every point on a road route. Fog counts for flights; steady rain only
+- **Open-Meteo.** The only source that covers both the full forecast range
+  and every point on a road route. Fog counts for flights; steady rain only
   counts for drives.
 
 ### Scoring (`app/risk.py`)
@@ -181,6 +201,10 @@ dark mode and on a phone-sized screen.
 - Long drives are timed as if driven without stopping (NY → SF ~51 h).
 - Weather along the flight path isn't checked, only at the airports.
 - Connections aren't handled.
+- U.S. only. A non-U.S. city name matches a U.S. town if one exists
+  ("London" → London, OH), which the page shows so it's easy to catch.
+  Puerto Rico and other territories aren't covered.
+- Typos aren't corrected ("Bostn" is rejected with a message).
 
 ## How I used AI
 
@@ -220,6 +244,16 @@ went into checking what came out. Things that came up that way:
   asking whether each result made sense.
 - macOS's built-in Python couldn't connect to OSRM (an SSL issue), so the
   project uses 3.13.
+
+Before submitting, I did one more pass: a separate AI-assisted code review
+plus about 80 inputs typed in the way people actually would. That turned up
+another batch, all fixed with tests in `tests/test_review_fixes.py`:
+- airport codes like DFW and RDU failing
+- "Chicago IL" without a comma not being understood
+- advice to "fly via LGA" when the storm covered LGA too
+- forecasts that only covered part of the day being treated as full coverage
+- a drive through Canada losing all its NWS data
+- same-day drives assuming an 8 AM start that had already passed
 
 ## Before real users
 

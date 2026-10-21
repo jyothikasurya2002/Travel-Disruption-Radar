@@ -124,6 +124,12 @@ def confidence(trip: Trip, signals: List[Signal], sources: List[SourceStatus]) -
         penalty += 2
         reasons.append("Part of the trip falls beyond the weather forecast range")
 
+    # Sources that answered but only cover part of the trip.
+    notes = list(dict.fromkeys(s.coverage_note for s in signals if s.coverage_note))
+    if notes:
+        penalty += 1
+        reasons.extend(notes[:3])
+
     if penalty == 0 and not any("unavailable" in r for r in reasons):
         reasons.insert(0, "All sources responded and forecasts cover the travel window")
     label = "high" if penalty == 0 else "medium" if penalty <= 2 else "low"
@@ -180,10 +186,13 @@ def recommend(trip: Trip, level: str, conf: str, signals: List[Signal],
 
 def _alternate_airports(trip: Trip, signals: List[Signal]) -> List[str]:
     """If one airport in a multi-airport city is the problem, name the others."""
+    # A signal's location can name several airports ("JFK, LGA" from a merged
+    # NWS alert, "LGA/EWR/JFK" from the city-level forecast); it applies to each.
     worst: Dict[str, Severity] = defaultdict(lambda: Severity.none)
     for s in signals:
         if s.valid_for_travel_date:
-            worst[s.location] = max(worst[s.location], s.severity, key=int)
+            for code in re.findall(r"\b[A-Z]{3}\b", s.location):
+                worst[code] = max(worst[code], s.severity, key=int)
     out = []
     for place in (trip.origin, trip.destination):
         codes = [a.iata for a in place.airports]

@@ -55,6 +55,12 @@ def parse(data: list, pairs: List[Tuple[Airport, Place]], trip: Trip) -> List[Si
             for sev, text in assess_period(f):
                 hazards.append((sev, text, starts))
 
+        # A TAF that ends partway through the travel day only vouches for the
+        # hours it covers.
+        coverage = None
+        if valid[1] < window[1]:
+            coverage = f"Airport forecast only runs until {fmt_local(valid[1], place.timezone)}"
+
         if hazards:
             worst = max(int(h[0]) for h in hazards)
             # Group by hazard kind ("gusty winds", "IFR conditions"…) so a hazard
@@ -71,10 +77,13 @@ def parse(data: list, pairs: List[Tuple[Airport, Place]], trip: Trip) -> List[Si
             headline = f"{ap.iata} forecast: " + "; ".join(parts[:3])
             sev = Severity(worst)
         else:
-            sev, headline = Severity.none, f"{ap.iata} forecast: VFR, no significant weather on travel day"
+            sev = Severity.none
+            headline = (f"{ap.iata} forecast: no significant weather until {fmt_local(valid[1], place.timezone)}"
+                        if coverage else f"{ap.iata} forecast: VFR, no significant weather on travel day")
         signals.append(Signal(
             source=SOURCE, area=area_of(trip, place), location=ap.iata, category="weather", severity=sev,
             headline=headline, detail=taf.get("rawTAF"), url=link, observed_at=issued,
+            coverage_note=coverage,
         ))
     return signals
 
@@ -86,7 +95,9 @@ def assess_period(f: dict) -> List[Hazard]:
 
     if any("TS" in t for t in tokens):
         out.append((Severity.high, f"thunderstorms ({wx})"))
-    if any("FZ" in t for t in tokens):
+    # Freezing rain/drizzle only. FZFG (freezing fog) is handled by the
+    # visibility rules below like any other fog.
+    if any("FZRA" in t or "FZDZ" in t for t in tokens):
         out.append((Severity.high, f"freezing precipitation ({wx})"))
     for t in tokens:
         if "SN" in t and "FZ" not in t:

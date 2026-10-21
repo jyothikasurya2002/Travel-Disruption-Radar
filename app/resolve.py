@@ -15,6 +15,9 @@ async def resolve_trip(origin: str, destination: str, date_text: str, mode: Mode
     # where the traveller is, not where the server is.
     travel_date = parse_travel_date(date_text, today=local_today(o.timezone))
 
+    if o.name == d.name:
+        raise LocationError(f"Origin and destination are both {o.name}. Enter two different places.")
+
     if mode == Mode.flight:
         for place in (o, d):
             if not place.airports:

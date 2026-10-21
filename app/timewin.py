@@ -5,8 +5,9 @@ Assumptions (we don't ask for a flight number or departure time):
   at each airport (first departure banks at major U.S. hubs start ~6 AM).
   Overnight-only events, like LGA's routine 00:05-06:00 closure, don't
   affect scheduled flights.
-- Driving: departure 08:00 local at the origin, constant average speed, so
-  each sample point gets an estimated time of arrival (ETA).
+- Driving: departure 08:00 local at the origin (or now, for a trip today
+  planned later than that), constant average speed, so each sample point
+  gets an estimated time of arrival (ETA).
 """
 from datetime import date, datetime, time, timedelta, timezone
 from typing import List, Optional, Tuple
@@ -25,19 +26,27 @@ Window = Tuple[datetime, datetime]  # UTC-aware [start, end)
 
 def operating_window(d: date, tz: str, now: Optional[datetime] = None) -> Window:
     """Travel-day operating hours, minus whatever has already passed: for a
-    trip today, a closure that ended at 6 AM is irrelevant at 10 AM."""
+    trip today, a closure that ended at 6 AM is irrelevant at 10 AM.
+
+    The travel date is the origin's date. At a destination further east it
+    can already be the next day (LA at 10:30 PM is 1:30 AM in New York), so
+    if that date is over there, use the destination's current day instead.
+    """
     z = ZoneInfo(tz)
+    now = now or datetime.now(timezone.utc)
+    d = max(d, now.astimezone(z).date())
     start = datetime.combine(d, time(OPERATING_START_HOUR), z).astimezone(timezone.utc)
     end = datetime.combine(d + timedelta(days=1), time(0), z).astimezone(timezone.utc)
-    now = now or datetime.now(timezone.utc)
     if start < now < end:
         start = now
     return start, end
 
 
-def drive_departure(trip: Trip) -> datetime:
+def drive_departure(trip: Trip, now: Optional[datetime] = None) -> datetime:
+    """08:00 at the origin, or now if a same-day trip is planned after that."""
     z = ZoneInfo(trip.origin.timezone)
-    return datetime.combine(trip.travel_date, time(DRIVE_DEPARTURE_HOUR), z).astimezone(timezone.utc)
+    planned = datetime.combine(trip.travel_date, time(DRIVE_DEPARTURE_HOUR), z).astimezone(timezone.utc)
+    return max(planned, now or datetime.now(timezone.utc))
 
 
 def eta(trip: Trip, p: RoutePoint) -> datetime:

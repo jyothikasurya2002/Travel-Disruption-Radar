@@ -1,6 +1,8 @@
 """Driving route + sample points to check weather along the road."""
 from typing import List
 
+import httpx
+
 from app.geo import haversine_km
 from app.http import get_json
 from app.models import DriveRoute, Place, RoutePoint
@@ -15,10 +17,16 @@ MAX_SAMPLES = 12
 
 async def drive_route(origin: Place, dest: Place) -> DriveRoute:
     coords = f"{origin.lon},{origin.lat};{dest.lon},{dest.lat}"
-    data = await get_json(
-        OSRM_URL.format(coords=coords),
-        {"overview": "full", "geometries": "geojson"},
-    )
+    try:
+        data = await get_json(
+            OSRM_URL.format(coords=coords),
+            {"overview": "full", "geometries": "geojson"},
+        )
+    except httpx.HTTPStatusError as e:
+        # OSRM answers 400 "NoRoute" when there's no road, e.g. Honolulu -> LA.
+        if e.response.status_code == 400:
+            raise ValueError(f"There's no driving route between {origin.name} and {dest.name}. Try flight mode.")
+        raise
     if data.get("code") != "Ok" or not data.get("routes"):
         raise ValueError(f"No driving route found between {origin.name} and {dest.name}.")
 

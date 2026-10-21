@@ -333,6 +333,7 @@ function signal(s) {
         <span>${esc(s.location)}</span>
         <span>as of ${esc(fmtTime(s.observed_at))}</span>
         ${s.valid_for_travel_date ? "" : `<span class="tag" title="Shown for context; not counted in the score">Context only</span>`}
+        ${s.coverage_note ? `<span class="tag" title="${esc(s.coverage_note)}">Partial: ${esc(s.coverage_note)}</span>` : ""}
         ${url ? `<a href="${esc(url)}" target="_blank" rel="noopener">source ↗</a>` : ""}
       </div>
       ${s.detail ? `<details class="raw"><summary>Raw evidence</summary><pre>${esc(s.detail)}</pre></details>` : ""}

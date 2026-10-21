@@ -81,6 +81,7 @@ class Signal(BaseModel):
     url: Optional[str] = None        # link back to the source
     observed_at: datetime            # when the source published it
     valid_for_travel_date: bool = True
+    coverage_note: Optional[str] = None  # set when the source only covers part of the trip
 
 
 class SourceStatus(BaseModel):

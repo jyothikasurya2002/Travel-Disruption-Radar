@@ -46,8 +46,27 @@ async def fetch(trip: Trip) -> List[Signal]:
     results = await asyncio.gather(*(
         get_json(ALERTS_URL, {"point": f"{c[1]:.4f},{c[2]:.4f}", "status": "actual"})
         for c in checks
-    ))
-    return parse(results, checks)
+    ), return_exceptions=True)
+
+    # One point failing shouldn't throw away the others. NWS only covers the
+    # U.S., so a drive through Canada (Anchorage -> Seattle) gets a 400 for
+    # those points. If every point fails, let the source fail as a whole.
+    ok = [(c, r) for c, r in zip(checks, results) if not isinstance(r, Exception)]
+    if not ok:
+        raise next(r for r in results if isinstance(r, Exception))
+    signals = parse([r for _, r in ok], [c for c, _ in ok])
+    missed: Dict[str, List[str]] = {}  # area -> labels NWS couldn't answer for
+    for c, r in zip(checks, results):
+        if isinstance(r, Exception):
+            missed.setdefault(c[5], []).append(c[0])
+    for area, labels in missed.items():
+        signals.append(Signal(
+            source=SOURCE, area=area, location=", ".join(labels), category="alert", severity=Severity.none,
+            headline=f"No NWS data for {len(labels)} location(s) (outside NWS coverage or no response)",
+            url="https://alerts.weather.gov/", observed_at=datetime.now(timezone.utc),
+            coverage_note=f"NWS alerts couldn't be checked for {', '.join(labels)}",
+        ))
+    return signals
 
 
 def _checks(trip: Trip) -> List[Check]:
@@ -65,7 +84,7 @@ def parse(results: List[dict], checks: List[Check]) -> List[Signal]:
     # The same alert often covers several of our points: report it once,
     # listing every place it affects.
     seen: Dict[str, Signal] = {}
-    clear: List[str] = []
+    clear: Dict[str, List[str]] = {}  # area -> labels with nothing found
     for (label, _, _, window, tz, area), data in zip(checks, results):
         hit = False
         for feat in data.get("features", []):
@@ -87,13 +106,13 @@ def parse(results: List[dict], checks: List[Check]) -> List[Signal]:
                 observed_at=_dt(p.get("sent")) or datetime.now(timezone.utc),
             )
         if not hit:
-            clear.append(label)
+            clear.setdefault(area, []).append(label)
 
     signals = list(seen.values())
-    if clear:
+    for area, labels in clear.items():
         signals.append(Signal(
-            source=SOURCE, area=checks[0][5], location=", ".join(clear), category="alert", severity=Severity.none,
-            headline=f"No travel-relevant NWS alerts for {len(clear)} checked location(s)",
+            source=SOURCE, area=area, location=", ".join(labels), category="alert", severity=Severity.none,
+            headline=f"No travel-relevant NWS alerts for {len(labels)} checked location(s)",
             url="https://alerts.weather.gov/", observed_at=datetime.now(timezone.utc),
         ))
     return signals

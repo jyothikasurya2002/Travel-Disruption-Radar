@@ -3,7 +3,7 @@ import csv
 import math
 from functools import lru_cache
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from app.http import get_json
 from app.models import Airport, Place
@@ -36,8 +36,14 @@ STATES = {
 # Common shorthand people actually type.
 ALIASES = {
     "nyc": "New York", "sf": "San Francisco", "la": "Los Angeles",
-    "dc": "Washington, DC", "philly": "Philadelphia", "vegas": "Las Vegas",
+    "dc": "Washington, DC", "washington": "Washington, DC",
+    "washington dc": "Washington, DC", "washington d.c.": "Washington, DC",
+    "philly": "Philadelphia", "vegas": "Las Vegas", "nola": "New Orleans",
+    "bay area": "San Francisco", "silicon valley": "San Jose",
 }
+# Abbreviations the geocoder doesn't expand itself ("Ft Lauderdale").
+ABBREVIATIONS = {"ft": "fort", "mt": "mount", "pt": "port"}
+FORECAST_URL = "https://api.open-meteo.com/v1/forecast"
 
 
 class LocationError(ValueError):
@@ -89,31 +95,78 @@ def airports_near(lat: float, lon: float) -> List[Airport]:
     return chosen[:MAX_AIRPORTS_PER_CITY]
 
 
+def split_state(text: str) -> Tuple[str, str]:
+    """'Chicago, IL' / 'Chicago IL' / 'Portland Oregon' -> (city, full state name).
+    Without a comma, the last word(s) only count as a state if something is
+    left for the city, so 'New York' and 'Kansas City' stay whole."""
+    if "," in text:
+        city, _, hint = (p.strip() for p in text.partition(","))
+        return city, STATES.get(hint.upper().replace(".", ""), hint)
+    words = text.split()
+    for n in (2, 1):  # "New Mexico" before "Mexico"
+        if len(words) > n:
+            tail = " ".join(words[-n:])
+            if n == 1 and tail.upper() in STATES:
+                return " ".join(words[:-n]), STATES[tail.upper()]
+            if tail.lower() in {s.lower() for s in STATES.values()}:
+                return " ".join(words[:-n]), tail
+    return text, ""
+
+
+def normalize_name(name: str) -> str:
+    """For comparing place names: 'St. Louis' == 'Saint Louis' == 'st louis'."""
+    words = name.lower().replace(".", "").replace("-", " ").split()
+    words = ["st" if w == "saint" else w for w in words]
+    return " ".join(words)
+
+
+def _expand_abbreviations(city: str) -> str:
+    words = city.split()
+    if words and words[0].lower().rstrip(".") in ABBREVIATIONS:
+        words[0] = ABBREVIATIONS[words[0].lower().rstrip(".")]
+    return " ".join(words)
+
+
+async def _search(name: str) -> list:
+    data = await get_json(GEOCODE_URL, {"name": name, "count": 10, "countryCode": "US", "language": "en"})
+    return data.get("results") or []
+
+
+async def timezone_at(lat: float, lon: float) -> str:
+    data = await get_json(FORECAST_URL, {"latitude": lat, "longitude": lon,
+                                         "timezone": "auto", "forecast_days": 1})
+    return data["timezone"]
+
+
 async def geocode(text: str) -> Place:
     raw = text.strip()
     if not raw:
         raise LocationError("Please enter a place.")
+    if not any(c.isalpha() for c in raw):
+        raise LocationError(f"'{raw}' isn't a place name. Enter a city or an airport code.")
 
     # An airport code typed directly ("SFO", "KJFK") is the most precise input.
-    # We still geocode its city to learn the timezone, then pin that airport.
+    # Built from the airport itself: city names like "Dallas-Fort Worth"
+    # don't geocode, and we already know where the airport is.
     if raw.isalpha() and len(raw) in (3, 4) and raw.lower() not in ALIASES:
         ap = airport_by_code(raw)
         if ap:
-            city = await geocode(f"{ap.city}, {ap.state}")
-            return city.model_copy(update={
-                "query": raw, "lat": ap.lat, "lon": ap.lon,
-                "airports": [ap.model_copy(update={"distance_km": 0.0})],
-            })
+            return Place(
+                query=raw, name=f"{ap.city}, {ap.state}", state=ap.state,
+                lat=ap.lat, lon=ap.lon, timezone=await timezone_at(ap.lat, ap.lon),
+                airports=[ap.model_copy(update={"distance_km": 0.0})],
+            )
 
-    expanded = ALIASES.get(raw.lower(), raw)
-    city, _, state_hint = (p.strip() for p in expanded.partition(","))
-    state_full = STATES.get(state_hint.upper(), state_hint) if state_hint else ""
+    city, state_full = split_state(ALIASES.get(raw.lower(), raw))
+    city = _expand_abbreviations(city)
 
-    data = await get_json(
-        GEOCODE_URL,
-        {"name": city, "count": 10, "countryCode": "US", "language": "en"},
-    )
-    results = data.get("results") or []
+    results = await _search(city)
+    # The geocoder treats "Saint Louis" and "St. Louis" as different names, so
+    # search both spellings and let the exact-match rule below pick.
+    first, _, rest = city.partition(" ")
+    if rest and first.lower().rstrip(".") in ("saint", "st"):
+        other = ("St. " if first.lower() == "saint" else "Saint ") + rest
+        results += await _search(other)
     if state_full:
         results = [r for r in results if r.get("admin1", "").lower() == state_full.lower()]
     if not results:
@@ -122,7 +175,7 @@ async def geocode(text: str) -> Place:
     # Exact name matches beat partial ones ("Aspen" must not become "Aspen Hill").
     # Among exact matches, the most populous wins, so "Portland" means
     # Portland, OR unless the user adds ", ME".
-    exact = [r for r in results if r["name"].lower() == city.lower()]
+    exact = [r for r in results if normalize_name(r["name"]) == normalize_name(city)]
     best = max(exact or results[:5], key=lambda r: r.get("population") or 0)
     state_code = next(
         (k for k, v in STATES.items() if v == best.get("admin1")), best.get("admin1", "")
